@@ -47,7 +47,14 @@ a{color:inherit}
 .barra .marca{font-family:"Alfa Slab One",serif;font-size:20px;text-decoration:none}
 .barra{border-bottom:0}
 body::before{content:"";display:block;height:10px;background:var(--rojo)}
-.barra a.wa{font-weight:600;font-size:15px;text-decoration:none;border-bottom:2px solid var(--mole);padding-bottom:1px}
+.barra a.wa{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:16px;text-decoration:none;background:#1E8E4A;color:#fff;padding:11px 18px;border-radius:999px}
+.barra a.wa:hover{background:#17733B}
+.barra a.wa svg{width:22px;height:22px}
+@media (max-width:420px){.barra a.wa{padding:10px 14px;font-size:15px}}
+.wa-flotante{position:fixed;right:18px;bottom:18px;z-index:30;width:62px;height:62px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;box-shadow:0 6px 0 rgba(42,18,6,.25);transition:bottom .25s}
+.wa-flotante:hover{background:#1EBE5A}
+.wa-flotante svg{width:34px;height:34px}
+@media (max-width:899px){body.con-barra .wa-flotante{bottom:92px}}
 
 /* ---------- portada ---------- */
 .portada{display:grid;gap:28px;align-items:center;padding:12px 0 56px;border-bottom:3px solid var(--mole)}
@@ -197,7 +204,7 @@ footer p{margin:4px 0}
 <div class="envoltura">
   <header class="barra">
     <a class="marca" href="#">Doña Juana</a>
-    <a class="wa" id="enlace-wa-top" href="#" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+    <a class="wa" id="enlace-wa-top" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2a13.2 13.2 0 0 0 6.6 1.7c7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.8-1.6l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.4 10.4 0 0 1-1.7-5.8C5.2 10 10 5.3 16 5.3s10.8 4.7 10.8 10.5S22 26.4 16 26.4zm5.9-7.8c-.3-.2-1.9-1-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.3-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 2.1.9 3 1 4 .8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.2-.6-.4z"/></svg><span>Pedir por WhatsApp</span></a>
   </header>
 
   <div id="estado-pago" hidden></div>
@@ -313,6 +320,8 @@ footer p{margin:4px 0}
     </form>
   </section>
 </div>
+
+<a class="wa-flotante" id="enlace-wa-flotante" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2a13.2 13.2 0 0 0 6.6 1.7c7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.8-1.6l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.4 10.4 0 0 1-1.7-5.8C5.2 10 10 5.3 16 5.3s10.8 4.7 10.8 10.5S22 26.4 16 26.4zm5.9-7.8c-.3-.2-1.9-1-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.3-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 2.1.9 3 1 4 .8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.2-.6-.4z"/></svg></a>
 
 <footer>
   <div class="envoltura">
@@ -494,6 +503,7 @@ function pintar(){
   $("total-movil").textContent = pesos(subtotal);
   $("piezas-movil").textContent = textoPiezas(piezas);
   $("barra-movil").classList.toggle("visible", charola.length > 0);
+  document.body.classList.toggle("con-barra", charola.length > 0);
   const ok = piezas >= MIN_MEDIAS*6;
   $("continuar").disabled = !ok;
   if (piezas > 0 && !ok) {
@@ -606,6 +616,7 @@ function actualizarWhatsApp(){
   const saludo = base + encodeURIComponent("Hola, quiero pedir tamales Doña Juana");
   $("enlace-wa-top").href = saludo;
   $("enlace-wa-pie").href = saludo;
+  $("enlace-wa-flotante").href = charola.length ? base + encodeURIComponent(mensajeWhatsApp()) : saludo;
 }
 
 // --- pago ---
