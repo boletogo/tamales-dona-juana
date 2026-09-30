@@ -301,9 +301,23 @@ footer p{margin:4px 0}
         <p class="envio-info" id="envio-info" aria-live="polite">Escribe tu código postal para calcular el envío. Llegamos hasta unos 17 km de la Condesa.</p>
         <label>Dirección de entrega<small>Calle, número, colonia y referencias</small><textarea name="direccion" autocomplete="street-address"></textarea></label>
       </div>
-      <p class="recoger-info" id="recoger-info" hidden>Te esperamos en <b>Tula 61, colonia Condesa, CP 06140</b>. Te confirmamos la hora por WhatsApp.</p>
+      <p class="recoger-info" id="recoger-info" hidden>Te esperamos en <b>Tula 61, colonia Condesa, CP 06140</b>. Elige abajo a qué hora pasas.</p>
 
-      <label>¿Para qué día?<input name="fecha" type="date" required></label>
+      <div class="fila dos">
+        <label>¿Para qué día?<input name="fecha" type="date" required></label>
+        <label><span id="texto-horario">¿En qué horario lo recibes?</span><select name="horario" required>
+          <option value="">Elige un horario</option>
+          <option>10:00 a 11:00 am</option>
+          <option>11:00 am a 12:00 pm</option>
+          <option>12:00 a 1:00 pm</option>
+          <option>1:00 a 2:00 pm</option>
+          <option>2:00 a 3:00 pm</option>
+          <option>3:00 a 4:00 pm</option>
+          <option>4:00 a 5:00 pm</option>
+          <option>5:00 a 6:00 pm</option>
+        </select></label>
+      </div>
+      <p class="nota" style="margin:-6px 0 0;font-size:15px">Entregamos de 10:00 am a 6:00 pm.</p>
       <label>Notas <small>(opcional)</small><textarea name="notas" placeholder="Ej. timbre descompuesto, llamar al llegar"></textarea></label>
 
       <div class="cuenta" id="cuenta">
@@ -553,6 +567,7 @@ function calcularEnvio(){
   const dom = form.tipo.value === "domicilio";
   $("campo-direccion").hidden = !dom;
   $("recoger-info").hidden = dom;
+  $("texto-horario").textContent = dom ? "¿En qué horario lo recibes?" : "¿A qué hora pasas?";
   const info = $("envio-info"), cp = (form.cp.value||"").trim();
   const e = envioActual();
   info.className = "envio-info";
@@ -573,13 +588,14 @@ form.addEventListener("change", e => {
   actualizarWhatsApp();
 });
 form.addEventListener("input", () => { calcularEnvio(); actualizarWhatsApp(); });
+form.addEventListener("change", () => { $("error-form").textContent = ""; });
 
 function datosPedido(){
   const f = new FormData(form);
   return {
     paquetes: charola,
     cliente: {nombre: (f.get("nombre")||"").trim(), telefono: (f.get("telefono")||"").replace(/\D/g,""), correo: (f.get("correo")||"").trim()},
-    entrega: {tipo: f.get("tipo"), cp: (f.get("cp")||"").trim(), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), notas: (f.get("notas")||"").trim()}
+    entrega: {tipo: f.get("tipo"), cp: (f.get("cp")||"").trim(), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), horario: f.get("horario") || "", notas: (f.get("notas")||"").trim()}
   };
 }
 function validar(p){
@@ -594,6 +610,7 @@ function validar(p){
     if (p.entrega.direccion.length < 10) return "Escribe la dirección completa de entrega.";
   }
   if (!p.entrega.fecha || p.entrega.fecha < fecha.min) return "Elige una fecha de entrega válida.";
+  if (!p.entrega.horario) return "Elige un horario.";
   return "";
 }
 
@@ -604,7 +621,7 @@ function mensajeWhatsApp(){
   let t = "Hola, quiero hacer un pedido de tamales Doña Juana:\n";
   if (lineas.length) t += lineas.join("\n") + `\nTotal: ${piezas} piezas, ${pesos(subtotal)}`;
   if (p.cliente.nombre) t += `\nNombre: ${p.cliente.nombre}`;
-  if (p.entrega.fecha && !$("entrega").hidden) t += `\nEntrega: ${p.entrega.tipo === "domicilio" ? "a domicilio" : "paso a recoger"}, ${p.entrega.fecha}`;
+  if (p.entrega.fecha && !$("entrega").hidden) t += `\nEntrega: ${p.entrega.tipo === "domicilio" ? "a domicilio" : "paso a recoger"}, ${p.entrega.fecha}${p.entrega.horario ? ", de " + p.entrega.horario : ""}`;
   if (p.entrega.tipo === "domicilio" && p.entrega.direccion) t += `\nDirección: ${p.entrega.direccion}${p.entrega.cp ? ", CP " + p.entrega.cp : ""}`;
   const env = envioActual(); if (lineas.length && env && !env.fuera && env.costo) t += `\nEnvío: ${pesos(env.costo)} · Total con envío: ${pesos(subtotal + env.costo)}`;
   if (p.entrega.notas) t += `\nNotas: ${p.entrega.notas}`;
