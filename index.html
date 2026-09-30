@@ -32,6 +32,7 @@
   --radio:14px;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 body{margin:0;background:var(--hoja);color:var(--mole);font:400 17px/1.55 "Figtree",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -164,6 +165,16 @@ legend{font-weight:600;font-size:15px;margin-bottom:6px}
 .opcion input:checked + span{background:var(--mole);color:var(--masa)}
 .opcion input:checked + span small{color:var(--hoja)}
 .opcion input:focus-visible + span{outline:3px solid var(--verde);outline-offset:2px}
+.bloque-direccion{display:grid;gap:12px}
+.cp input{max-width:180px;letter-spacing:.08em;font-weight:700}
+.envio-info{margin:0;font-size:15px;color:var(--comal)}
+.envio-info.ok{color:var(--mole);font-weight:600}
+.envio-info.fuera{color:var(--rojo);font-weight:600}
+.recoger-info{margin:0;padding:14px;border-radius:12px;background:var(--masa);border:2px dashed var(--mole)}
+.cuenta{border-top:2px solid var(--mole);padding-top:12px;display:grid;gap:4px;max-width:360px}
+.cuenta div{display:flex;justify-content:space-between}
+.cuenta .c-total{margin-top:4px;font-weight:700}
+.cuenta .c-total b{font-family:"Alfa Slab One",serif;font-weight:400;font-size:30px;color:var(--rojo)}
 .acciones{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:6px}
 .error{color:var(--adobo);font-weight:600;margin:0}
 .seguro{font-size:14px;color:var(--comal);margin:0}
@@ -273,16 +284,26 @@ footer p{margin:4px 0}
       <fieldset>
         <legend>¿Cómo lo recibes?</legend>
         <div class="opciones">
-          <label class="opcion"><input type="radio" name="tipo" value="domicilio" checked><span>A domicilio<small id="texto-envio">Costo de envío por confirmar</small></span></label>
-          <label class="opcion"><input type="radio" name="tipo" value="recoger"><span>Paso a recoger<small>Sin costo</small></span></label>
+          <label class="opcion"><input type="radio" name="tipo" value="domicilio" checked><span>A domicilio<small>De $40 a $80 según tu código postal</small></span></label>
+          <label class="opcion"><input type="radio" name="tipo" value="recoger"><span>Paso a recoger<small>Sin costo, en Tula 61, Condesa</small></span></label>
         </div>
       </fieldset>
 
-      <label id="campo-direccion">Dirección de entrega<small>Calle, número, colonia, alcaldía y referencias</small><textarea name="direccion" autocomplete="street-address"></textarea></label>
+      <div id="campo-direccion" class="bloque-direccion">
+        <label class="cp">Código postal<input name="cp" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" placeholder="06140"></label>
+        <p class="envio-info" id="envio-info" aria-live="polite">Escribe tu código postal para calcular el envío. Llegamos hasta unos 17 km de la Condesa.</p>
+        <label>Dirección de entrega<small>Calle, número, colonia y referencias</small><textarea name="direccion" autocomplete="street-address"></textarea></label>
+      </div>
+      <p class="recoger-info" id="recoger-info" hidden>Te esperamos en <b>Tula 61, colonia Condesa, CP 06140</b>. Te confirmamos la hora por WhatsApp.</p>
 
       <label>¿Para qué día?<input name="fecha" type="date" required></label>
       <label>Notas <small>(opcional)</small><textarea name="notas" placeholder="Ej. timbre descompuesto, llamar al llegar"></textarea></label>
 
+      <div class="cuenta" id="cuenta">
+        <div><span>Tamales</span><span id="c-sub">$0</span></div>
+        <div><span>Envío</span><span id="c-envio">—</span></div>
+        <div class="c-total"><span>Total</span><b id="c-total">$0</b></div>
+      </div>
       <p class="error" id="error-form" role="alert"></p>
       <div class="acciones">
         <button class="boton" type="submit" id="pagar">Pagar con Mercado Pago</button>
@@ -300,8 +321,8 @@ footer p{margin:4px 0}
       <p>Tamales norteños, receta tradicional. Ciudad de México.</p>
     </div>
     <div>
-      <p><a id="enlace-wa-pie" href="#" target="_blank" rel="noopener">WhatsApp</a></p>
-      <p><a href="https://www.facebook.com/" id="enlace-fb" target="_blank" rel="noopener">Facebook</a></p>
+      <p><a id="enlace-wa-pie" href="#" target="_blank" rel="noopener">WhatsApp 55 8462 5578</a></p>
+      <p><a href="https://www.instagram.com/donajuanatamales/" target="_blank" rel="noopener">Instagram @donajuanatamales</a></p>
     </div>
   </div>
 </footer>
@@ -309,11 +330,11 @@ footer p{margin:4px 0}
 <script>
 /* =================== CONFIGURACIÓN =================== */
 // Tu WhatsApp con 52 + 10 dígitos, sin espacios. Ej: "5215512345678"
-const WHATSAPP = "52XXXXXXXXXX";
+const WHATSAPP = "525584625578";
 // Dirección del puente de cobro en Cloudflare (la llenamos al publicarlo)
 const WORKER_URL = "https://PENDIENTE.workers.dev";
 // Costo de envío a domicilio en pesos (0 = sin costo). Debe coincidir con el del puente.
-const ENVIO = 0;
+// Los costos de envío y las distancias por código postal están en envios.json
 const PRECIO_MEDIA = 100;     // precio por media docena
 const MIN_MEDIAS = 2;         // pedido mínimo: 2 medias = 1 docena
 const DIAS_ANTICIPACION = 1;  // desde cuándo se puede elegir fecha
@@ -480,6 +501,7 @@ function pintar(){
     $("aviso").textContent = `Agrega ${MIN_MEDIAS*6 - piezas} piezas más para completar la docena mínima.`;
   }
   if (!ok) $("entrega").hidden = true;
+  if (typeof calcularEnvio === "function" && form) calcularEnvio();
   actualizarWhatsApp();
 }
 $("bandejas").addEventListener("click", e => {
@@ -503,26 +525,64 @@ const hoy = new Date(); hoy.setDate(hoy.getDate() + DIAS_ANTICIPACION);
 fecha.min = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,"0")}-${String(hoy.getDate()).padStart(2,"0")}`;
 fecha.value = fecha.min;
 
-$("texto-envio").textContent = ENVIO > 0 ? "Envío " + pesos(ENVIO) : "Costo de envío por confirmar";
+// --- envío por código postal ---
+let ENVIOS = null;
+fetch("envios.json").then(r => r.json()).then(d => { ENVIOS = d; calcularEnvio(); }).catch(() => {});
+function envioDeCP(cp){
+  if (!ENVIOS || !/^\d{5}$/.test(cp)) return null;
+  const e = ENVIOS.cps[cp];
+  if (!e) return {fuera:true};
+  const t = ENVIOS.tarifas.find(([hasta]) => e[0] <= hasta);
+  return t ? {km:e[0], colonias:e[1], costo:t[1]} : {fuera:true};
+}
+function envioActual(){
+  if (form.tipo.value !== "domicilio") return {costo:0};
+  return envioDeCP((form.cp.value||"").trim());
+}
+function calcularEnvio(){
+  const dom = form.tipo.value === "domicilio";
+  $("campo-direccion").hidden = !dom;
+  $("recoger-info").hidden = dom;
+  const info = $("envio-info"), cp = (form.cp.value||"").trim();
+  const e = envioActual();
+  info.className = "envio-info";
+  if (dom) {
+    if (cp.length < 5) info.textContent = "Escribe tu código postal para calcular el envío. Llegamos hasta unos 17 km de la Condesa.";
+    else if (!ENVIOS) info.textContent = "Calculando envío…";
+    else if (e.fuera) { info.textContent = "No llegamos a ese código postal. Puedes pasar a recoger a Tula 61, Condesa, o escríbenos por WhatsApp."; info.className = "envio-info fuera"; }
+    else { info.textContent = `${e.colonias}: a unos ${Math.round(e.km)} km. Envío ${pesos(e.costo)}.`; info.className = "envio-info ok"; }
+  }
+  const sub = totales().subtotal;
+  const costo = e && !e.fuera ? e.costo : null;
+  $("c-sub").textContent = pesos(sub);
+  $("c-envio").textContent = !dom ? "Sin costo" : costo === null ? "—" : pesos(costo);
+  $("c-total").textContent = pesos(sub + (costo || 0));
+}
 form.addEventListener("change", e => {
-  if (e.target.name === "tipo") $("campo-direccion").hidden = form.tipo.value !== "domicilio";
+  calcularEnvio();
   actualizarWhatsApp();
 });
-form.addEventListener("input", actualizarWhatsApp);
+form.addEventListener("input", () => { calcularEnvio(); actualizarWhatsApp(); });
 
 function datosPedido(){
   const f = new FormData(form);
   return {
     paquetes: charola,
     cliente: {nombre: (f.get("nombre")||"").trim(), telefono: (f.get("telefono")||"").replace(/\D/g,""), correo: (f.get("correo")||"").trim()},
-    entrega: {tipo: f.get("tipo"), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), notas: (f.get("notas")||"").trim()}
+    entrega: {tipo: f.get("tipo"), cp: (f.get("cp")||"").trim(), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), notas: (f.get("notas")||"").trim()}
   };
 }
 function validar(p){
   if (totales().piezas < MIN_MEDIAS*6) return "El pedido mínimo es una docena.";
   if (!p.cliente.nombre) return "Escribe tu nombre.";
   if (p.cliente.telefono.length < 10) return "Escribe tu WhatsApp a 10 dígitos.";
-  if (p.entrega.tipo === "domicilio" && p.entrega.direccion.length < 10) return "Escribe la dirección completa de entrega.";
+  if (p.entrega.tipo === "domicilio") {
+    const e = envioActual();
+    if (!/^\d{5}$/.test(p.entrega.cp)) return "Escribe tu código postal a 5 dígitos.";
+    if (!e) return "Espera un momento, estamos calculando el envío.";
+    if (e.fuera) return "No llegamos a ese código postal. Elige pasar a recoger o pide por WhatsApp.";
+    if (p.entrega.direccion.length < 10) return "Escribe la dirección completa de entrega.";
+  }
   if (!p.entrega.fecha || p.entrega.fecha < fecha.min) return "Elige una fecha de entrega válida.";
   return "";
 }
@@ -535,7 +595,8 @@ function mensajeWhatsApp(){
   if (lineas.length) t += lineas.join("\n") + `\nTotal: ${piezas} piezas, ${pesos(subtotal)}`;
   if (p.cliente.nombre) t += `\nNombre: ${p.cliente.nombre}`;
   if (p.entrega.fecha && !$("entrega").hidden) t += `\nEntrega: ${p.entrega.tipo === "domicilio" ? "a domicilio" : "paso a recoger"}, ${p.entrega.fecha}`;
-  if (p.entrega.tipo === "domicilio" && p.entrega.direccion) t += `\nDirección: ${p.entrega.direccion}`;
+  if (p.entrega.tipo === "domicilio" && p.entrega.direccion) t += `\nDirección: ${p.entrega.direccion}${p.entrega.cp ? ", CP " + p.entrega.cp : ""}`;
+  const env = envioActual(); if (lineas.length && env && !env.fuera && env.costo) t += `\nEnvío: ${pesos(env.costo)} · Total con envío: ${pesos(subtotal + env.costo)}`;
   if (p.entrega.notas) t += `\nNotas: ${p.entrega.notas}`;
   return t;
 }
