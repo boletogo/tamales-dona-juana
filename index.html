@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tamales Doña Juana · Pide en línea</title>
+<meta name="description" content="Tamales Doña Juana en Ciudad de México. Arma tu docena con los sabores que quieras y paga en línea con Mercado Pago.">
+<meta property="og:title" content="Tamales Doña Juana">
+<meta property="og:description" content="Arma tu docena con los sabores que quieras. $200 la docena.">
+<link rel="icon" href="logo.webp" type="image/webp">
+<meta property="og:image" content="https://xn--tamalesdoajuana-6qb.com/foto-mesa-roja.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CONFIGURACIÓN RÁPIDA: los datos que cambias seguido están
+   en el <script> al final (WHATSAPP, WORKER_URL, SABORES).
+   ============================================================ */
+:root{
+  --hoja:#F6E3AE;      /* fondo: hoja de maíz */
+  --naranja:#FDA70D;   /* naranja del logo */
+  --masa:#FAF1D4;      /* paneles: masa */
+  --mole:#2A1206;      /* texto principal */
+  --comal:#6B4A2F;     /* texto secundario */
+  --verde:#2E6A3B;     /* botón principal */
+  --verde-osc:#23522D;
+  --adobo:#A8321F;     /* precios y avisos */
+  --linea:#CDB57A;
+  --radio:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--hoja);color:var(--mole);font:400 17px/1.55 "Figtree",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--verde);outline-offset:3px;border-radius:6px}
+.envoltura{max-width:1120px;margin:0 auto;padding:0 20px}
+.display{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;letter-spacing:.005em;line-height:1}
+
+/* ---------- barra superior ---------- */
+.barra{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.barra .marca{font-family:"Alfa Slab One",serif;font-size:20px;text-decoration:none}
+.barra{border-bottom:0}
+body::before{content:"";display:block;height:8px;background:var(--naranja)}
+.barra a.wa{font-weight:600;font-size:15px;text-decoration:none;border-bottom:2px solid var(--mole);padding-bottom:1px}
+
+/* ---------- portada ---------- */
+.portada{display:grid;gap:28px;align-items:center;padding:12px 0 56px;border-bottom:3px solid var(--mole)}
+@media (min-width:820px){.portada{grid-template-columns:minmax(260px,420px) 1fr;gap:56px;padding:24px 0 64px}}
+.logo{width:min(360px,78vw);height:auto;margin:0 auto;filter:drop-shadow(0 6px 0 rgba(42,18,6,.18))}
+@media (min-width:820px){.logo{width:100%}}
+.portada h1{font-size:clamp(42px,6.4vw,76px);margin:0 0 18px;max-width:14ch}
+.portada p{max-width:40ch;font-size:19px;margin:0 0 24px;color:var(--comal)}
+.precio-grande{display:flex;gap:32px;margin:0 0 28px}
+.precio-grande div{font-weight:600;font-size:15px;color:var(--comal)}
+.precio-grande b{display:block;font-family:"Alfa Slab One",serif;font-weight:400;font-size:40px;color:var(--mole);line-height:1.05}
+
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;background:var(--verde);color:#fff;font:700 18px/1 "Figtree",sans-serif;padding:18px 26px;border-radius:999px;text-decoration:none;transition:background .15s}
+.boton:hover{background:var(--verde-osc)}
+.boton[disabled]{background:#9C9275;cursor:not-allowed}
+.boton.secundario{background:transparent;color:var(--mole);border:2px solid var(--mole)}
+.boton.secundario:hover{background:var(--masa)}
+
+/* ---------- pedido ---------- */
+.pedido{display:grid;grid-template-columns:1fr;gap:40px;padding:48px 0 64px}
+@media (min-width:900px){.pedido{grid-template-columns:1.35fr 1fr;gap:56px}}
+.pedido h2,.entrega h2{font-size:clamp(34px,5vw,48px);margin:0 0 6px}
+.nota{color:var(--comal);margin:0 0 24px;max-width:52ch}
+
+.sabores{list-style:none;margin:0;padding:0;border-top:2px solid var(--mole)}
+.sabor{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:center;padding:18px 0;border-bottom:1px solid var(--linea)}
+.sabor .punto{width:22px;height:22px;border-radius:50%;border:2px solid var(--mole)}
+.sabor h3{margin:0;font-size:19px;font-weight:700;line-height:1.25}
+.sabor p{margin:2px 0 0;font-size:15px;color:var(--comal)}
+.contador{display:flex;align-items:center;gap:4px;background:var(--masa);border:2px solid var(--mole);border-radius:999px;padding:3px}
+.contador button{width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--mole);font:700 24px/1 "Figtree",sans-serif;cursor:pointer}
+.contador button:hover:not([disabled]){background:var(--hoja)}
+.contador button[disabled]{opacity:.3;cursor:default}
+.contador output{min-width:64px;text-align:center;font-weight:700;font-size:15px;line-height:1.1}
+.contador output small{display:block;font-weight:500;font-size:12px;color:var(--comal)}
+
+/* ---------- la charola (elemento protagonista) ---------- */
+.charola{background:var(--masa);border:3px solid var(--mole);border-radius:22px;padding:24px;align-self:start}
+@media (min-width:900px){.charola{position:sticky;top:20px}}
+.charola h2{font-size:30px}
+.docenas{display:flex;flex-direction:column;gap:14px;margin:18px 0 20px}
+.docena{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:12px;border-radius:14px;background:var(--hoja);border:2px dashed var(--linea)}
+.docena.llena{border-style:solid;border-color:var(--mole)}
+.hueco{aspect-ratio:3/4;border-radius:40% 40% 46% 46%/34% 34% 60% 60%;background:rgba(59,30,18,.08);border:2px solid transparent;transition:background .2s,transform .2s}
+.hueco.con{border-color:var(--mole);transform:scale(1.02)}
+.resumen{list-style:none;margin:0 0 16px;padding:0;font-size:15px}
+.resumen li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted var(--linea)}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 14px}
+.total span{font-weight:600;color:var(--comal)}
+.total b{font-family:"Alfa Slab One",serif;font-weight:400;font-size:34px}
+.aviso.falta{color:var(--adobo)}
+.aviso{font-size:15px;font-weight:600;color:var(--verde);min-height:1.5em;margin:0 0 12px}
+.charola .boton{width:100%}
+.vacio{color:var(--comal);font-size:15px;margin:0 0 16px}
+
+/* fotos */
+.sabor.con-botones{grid-template-columns:76px 1fr auto;gap:16px}
+.miniatura{width:76px;height:76px;border-radius:14px;object-fit:cover;border:2px solid var(--mole);box-shadow:4px 4px 0 var(--c)}
+.miniatura.sin-foto{display:block;background:var(--c)}
+@media (max-width:520px){.sabor.con-botones{grid-template-columns:64px 1fr}.miniatura{width:64px;height:64px}}
+.mesa{margin:0;padding:48px 0 0}
+.mesa img{width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;border-radius:22px;border:3px solid var(--mole)}
+@media (max-width:640px){.mesa img{aspect-ratio:4/3}}
+.mesa figcaption{margin-top:10px;font-size:15px;color:var(--comal)}
+/* modos de pedido */
+.modos{display:inline-flex;border:2px solid var(--mole);border-radius:999px;padding:4px;margin:0 0 22px;background:var(--masa)}
+.modos button{border:0;background:transparent;color:var(--mole);font:700 16px/1 "Figtree",sans-serif;padding:12px 20px;border-radius:999px;cursor:pointer}
+.modos button[aria-selected="true"]{background:var(--mole);color:var(--masa)}
+.barra-prog i{background:var(--naranja)}
+.agregar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.agregar button{border:2px solid var(--mole);background:var(--masa);color:var(--mole);border-radius:999px;padding:9px 14px;font:700 15px/1.1 "Figtree",sans-serif;cursor:pointer;text-align:center}
+.agregar button small{display:block;font-weight:500;font-size:12px;color:var(--comal)}
+.agregar button:hover{background:var(--mole);color:var(--masa)}
+.agregar button:hover small{color:var(--hoja)}
+@media (max-width:520px){.sabor.con-botones{grid-template-columns:64px 1fr}.sabor.con-botones .agregar{grid-column:1/-1;justify-content:stretch}.sabor.con-botones .agregar button{flex:1}}
+.tamano legend{margin-bottom:10px}
+.progreso{display:grid;gap:12px;margin-top:20px}
+.barra-prog{height:12px;border-radius:999px;background:var(--masa);border:2px solid var(--mole);overflow:hidden}
+.barra-prog i{display:block;height:100%;width:0;background:var(--verde);transition:width .2s}
+.progreso p{margin:0;font-weight:600}
+/* bandejas en la charola */
+.bandejas{list-style:none;margin:16px 0;padding:0;display:grid;gap:14px}
+.bandeja{background:var(--hoja);border:2px solid var(--mole);border-radius:14px;padding:12px}
+.bandeja .cab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;font-size:15px}
+.bandeja .cab b{font-weight:700}
+.bandeja .cab small{display:block;color:var(--comal);font-size:13px}
+.bandeja .huecos{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.quitar{border:0;background:none;color:var(--adobo);font:600 14px "Figtree",sans-serif;text-decoration:underline;cursor:pointer;padding:4px 0 0}
+/* barra fija en celular */
+.barra-movil{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--mole);color:var(--masa);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:12px;transform:translateY(110%);transition:transform .25s}
+.barra-movil.visible{transform:none}
+.barra-movil b{font-size:18px}
+.barra-movil small{display:block;opacity:.8;font-size:13px}
+.barra-movil .boton{padding:14px 20px;font-size:16px;background:var(--hoja);color:var(--mole)}
+@media (min-width:900px){.barra-movil{display:none}}
+
+/* ---------- entrega y pago ---------- */
+.entrega{padding:56px 0 72px;border-top:3px solid var(--mole)}
+.entrega[hidden]{display:none}
+form{display:grid;gap:18px;max-width:640px}
+.fila{display:grid;gap:18px}
+@media (min-width:640px){.fila.dos{grid-template-columns:1fr 1fr}}
+label{display:grid;gap:6px;font-weight:600;font-size:15px}
+label small{font-weight:400;color:var(--comal)}
+input,select,textarea{font:500 17px/1.3 "Figtree",sans-serif;color:var(--mole);background:var(--masa);border:2px solid var(--mole);border-radius:12px;padding:13px 14px;width:100%}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--verde);outline-offset:1px}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:10px}
+legend{font-weight:600;font-size:15px;margin-bottom:6px}
+.opciones{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opcion{position:relative}
+.opcion input{position:absolute;opacity:0;inset:0}
+.opcion span{display:block;border:2px solid var(--mole);border-radius:12px;padding:14px;background:var(--masa);cursor:pointer;font-weight:600}
+.opcion span small{display:block;font-weight:400;color:var(--comal);margin-top:2px}
+.opcion input:checked + span{background:var(--mole);color:var(--masa)}
+.opcion input:checked + span small{color:var(--hoja)}
+.opcion input:focus-visible + span{outline:3px solid var(--verde);outline-offset:2px}
+.acciones{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:6px}
+.error{color:var(--adobo);font-weight:600;margin:0}
+.seguro{font-size:14px;color:var(--comal);margin:0}
+
+/* ---------- mensaje al regresar de Mercado Pago ---------- */
+.estado-pago{padding:20px;border-radius:var(--radio);margin:24px 0 0;border:3px solid var(--mole);background:var(--masa)}
+.estado-pago h2{font-size:28px;margin:0 0 6px}
+.estado-pago p{margin:0}
+
+footer{background:var(--mole);color:var(--masa);padding:40px 0 110px}
+@media (min-width:900px){footer{padding-bottom:40px}}
+footer .envoltura{display:flex;flex-wrap:wrap;gap:20px 40px;justify-content:space-between}
+footer .marca{font-family:"Alfa Slab One",serif;font-size:26px}
+footer a{color:var(--hoja)}
+footer p{margin:4px 0}
+</style>
+</head>
+<body>
+
+<div class="envoltura">
+  <header class="barra">
+    <a class="marca" href="#">Doña Juana</a>
+    <a class="wa" id="enlace-wa-top" href="#" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+  </header>
+
+  <div id="estado-pago" hidden></div>
+
+  <section class="portada" aria-labelledby="titulo">
+    <img class="logo" src="logo.webp" width="560" height="560" alt="Doña Juana, tamales norteños, receta tradicional">
+    <div class="portada-texto">
+      <h1 id="titulo" class="display">Tamales norteños hechos en casa</h1>
+      <p>Siete sabores de receta tradicional, en la Ciudad de México. Pídelos por docena, media docena o surtidos, y paga en línea.</p>
+      <div class="precio-grande">
+        <div><b>$200</b>la docena</div>
+        <div><b>$100</b>media docena</div>
+      </div>
+      <a class="boton" href="#pedido">Arma tu pedido</a>
+    </div>
+  </section>
+  <figure class="mesa">
+    <img src="foto-mesa-roja.webp" width="1400" height="1050" alt="Una bolsa de tamales Doña Juana junto a un plato de tamales bañados en salsa roja" loading="lazy">
+    <figcaption>Los entregamos en bolsa, listos para calentar en vaporera o microondas.</figcaption>
+  </figure>
+</div>
+
+<div class="envoltura">
+  <section class="pedido" id="pedido" aria-labelledby="titulo-pedido">
+    <div>
+      <h2 id="titulo-pedido" class="display">Arma tu pedido</h2>
+      <p class="nota">Pide docenas o medias docenas de un solo sabor, o ármalas surtidas. El pedido mínimo es una docena.</p>
+
+      <div class="modos" role="tablist" aria-label="Forma de pedir">
+        <button role="tab" id="tab-sabor" aria-selected="true" aria-controls="panel-sabor">De un solo sabor</button>
+        <button role="tab" id="tab-surtida" aria-selected="false" aria-controls="panel-surtida" tabindex="-1">Surtida</button>
+      </div>
+
+      <div id="panel-sabor" role="tabpanel" aria-labelledby="tab-sabor">
+        <ul class="sabores" id="lista-sabores"></ul>
+      </div>
+
+      <div id="panel-surtida" role="tabpanel" aria-labelledby="tab-surtida" hidden>
+        <fieldset class="tamano">
+          <legend>¿De qué tamaño?</legend>
+          <div class="opciones">
+            <label class="opcion"><input type="radio" name="tamano-surtida" value="docena" checked><span>Docena surtida<small>12 piezas · $200</small></span></label>
+            <label class="opcion"><input type="radio" name="tamano-surtida" value="media"><span>Media surtida<small>6 piezas · $100</small></span></label>
+          </div>
+        </fieldset>
+        <p class="nota" style="margin:18px 0 8px">Cada sabor va de 2 en 2.</p>
+        <ul class="sabores" id="lista-surtida"></ul>
+        <div class="progreso">
+          <div class="barra-prog" aria-hidden="true"><i id="relleno"></i></div>
+          <p id="texto-progreso" aria-live="polite">Llevas 0 de 12</p>
+          <button class="boton" id="agregar-surtida" disabled>Agregar a mi charola</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="charola" aria-labelledby="titulo-charola">
+      <h2 id="titulo-charola" class="display">Tu charola</h2>
+      <p class="vacio" id="vacio">Todavía no has agregado tamales.</p>
+      <ul class="bandejas" id="bandejas"></ul>
+      <div class="total"><span id="piezas">0 piezas</span><b id="total">$0</b></div>
+      <p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+      <button class="boton" id="continuar" disabled>Continuar con la entrega</button>
+    </aside>
+  </section>
+</div>
+
+<div class="barra-movil" id="barra-movil" aria-hidden="true">
+  <div><b id="total-movil">$0</b><small id="piezas-movil">0 piezas</small></div>
+  <a class="boton" href="#titulo-charola" id="ver-charola" tabindex="-1">Ver mi charola</a>
+</div>
+
+<div class="envoltura">
+  <section class="entrega" id="entrega" hidden aria-labelledby="titulo-entrega">
+    <h2 id="titulo-entrega" class="display">Entrega y pago</h2>
+    <p class="nota">Con estos datos preparamos y te entregamos tu pedido. El pago se hace en la página segura de Mercado Pago.</p>
+
+    <form id="formulario" novalidate>
+      <div class="fila dos">
+        <label>Nombre<input name="nombre" autocomplete="name" required></label>
+        <label>WhatsApp<small>10 dígitos, para confirmar tu pedido</small><input name="telefono" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[0-9 ]{10,14}" required></label>
+      </div>
+      <label>Correo <small>(opcional, para tu comprobante)</small><input name="correo" type="email" autocomplete="email"></label>
+
+      <fieldset>
+        <legend>¿Cómo lo recibes?</legend>
+        <div class="opciones">
+          <label class="opcion"><input type="radio" name="tipo" value="domicilio" checked><span>A domicilio<small id="texto-envio">Costo de envío por confirmar</small></span></label>
+          <label class="opcion"><input type="radio" name="tipo" value="recoger"><span>Paso a recoger<small>Sin costo</small></span></label>
+        </div>
+      </fieldset>
+
+      <label id="campo-direccion">Dirección de entrega<small>Calle, número, colonia, alcaldía y referencias</small><textarea name="direccion" autocomplete="street-address"></textarea></label>
+
+      <label>¿Para qué día?<input name="fecha" type="date" required></label>
+      <label>Notas <small>(opcional)</small><textarea name="notas" placeholder="Ej. timbre descompuesto, llamar al llegar"></textarea></label>
+
+      <p class="error" id="error-form" role="alert"></p>
+      <div class="acciones">
+        <button class="boton" type="submit" id="pagar">Pagar con Mercado Pago</button>
+        <a class="boton secundario" id="enlace-wa-pedido" href="#" target="_blank" rel="noopener">Mejor lo pido por WhatsApp</a>
+      </div>
+      <p class="seguro">Aceptamos tarjeta de crédito o débito, efectivo en tiendas y saldo de Mercado Pago. Nunca vemos los datos de tu tarjeta.</p>
+    </form>
+  </section>
+</div>
+
+<footer>
+  <div class="envoltura">
+    <div>
+      <div class="marca">Doña Juana</div>
+      <p>Tamales norteños, receta tradicional. Ciudad de México.</p>
+    </div>
+    <div>
+      <p><a id="enlace-wa-pie" href="#" target="_blank" rel="noopener">WhatsApp</a></p>
+      <p><a href="https://www.facebook.com/" id="enlace-fb" target="_blank" rel="noopener">Facebook</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =================== CONFIGURACIÓN =================== */
+// Tu WhatsApp con 52 + 10 dígitos, sin espacios. Ej: "5215512345678"
+const WHATSAPP = "52XXXXXXXXXX";
+// Dirección del puente de cobro en Cloudflare (la llenamos al publicarlo)
+const WORKER_URL = "https://PENDIENTE.workers.dev";
+// Costo de envío a domicilio en pesos (0 = sin costo). Debe coincidir con el del puente.
+const ENVIO = 0;
+const PRECIO_MEDIA = 100;     // precio por media docena
+const MIN_MEDIAS = 2;         // pedido mínimo: 2 medias = 1 docena
+const DIAS_ANTICIPACION = 1;  // desde cuándo se puede elegir fecha
+
+const SABORES = [
+  {id:"adobo",   nombre:"Puerco en adobo",                       desc:"Carne de puerco con chiles secos",          color:"#A8321F", foto:"foto-adobo.webp"},
+  {id:"verde",   nombre:"Pollo en salsa verde",                  desc:"Pollo en salsa de tomate verde",            color:"#4F8A3C", foto:"foto-verde.webp"},
+  {id:"mole",    nombre:"Pollo en mole almendrado",              desc:"Pollo en mole con almendra",                color:"#5A2E1C", foto:""},
+  {id:"chicharron", nombre:"Chicharrón prensado",                desc:"En salsa verde con tomate y cilantro",      color:"#D08A2E", foto:"foto-chicharron.webp"},
+  {id:"frijolchorizo", nombre:"Frijoles con chorizo y queso manchego", desc:"Frijol, chorizo y queso manchego",    color:"#7A2340", foto:"foto-frijolchorizo.webp"},
+  {id:"frijolqueso",   nombre:"Frijoles con queso manchego",     desc:"Frijol con queso manchego",                 color:"#8C6A48", foto:""},
+  {id:"rajas",   nombre:"Rajas con queso",                       desc:"Chile jalapeño y queso panela",             color:"#9DBF5A", foto:"foto-rajas.webp"}
+];
+/* ===================================================== */
+
+const pesos = n => "$" + n.toLocaleString("es-MX");
+const $ = id => document.getElementById(id);
+const porId = Object.fromEntries(SABORES.map(s => [s.id, s]));
+const PIEZAS = {docena:12, media:6};
+const PRECIO = {docena:PRECIO_MEDIA*2, media:PRECIO_MEDIA};
+
+// La charola es una lista de paquetes:
+//  {tipo:"sabor", tamano:"docena"|"media", sabor:"adobo"}
+//  {tipo:"surtida", tamano:"docena"|"media", pares:{adobo:2, rajas:4}}
+const charola = [];
+
+// --- pestañas ---
+const tabs = [$("tab-sabor"), $("tab-surtida")];
+function elegirTab(t){
+  tabs.forEach(x => {
+    const on = x === t;
+    x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1;
+    $(x.getAttribute("aria-controls")).hidden = !on;
+  });
+}
+tabs.forEach(t => {
+  t.addEventListener("click", () => elegirTab(t));
+  t.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const o = tabs[1 - tabs.indexOf(t)]; elegirTab(o); o.focus(); }
+  });
+});
+
+// --- un solo sabor ---
+const lista = $("lista-sabores");
+SABORES.forEach(s => {
+  const li = document.createElement("li");
+  li.className = "sabor con-botones" + (s.foto ? " con-foto" : "");
+  li.innerHTML = `
+    ${s.foto ? `<img class="miniatura" src="${s.foto}" alt="" width="160" height="160" loading="lazy" style="--c:${s.color}">` : `<span class="miniatura sin-foto" style="--c:${s.color}" aria-hidden="true"></span>`}
+    <div><h3>${s.nombre}</h3><p>${s.desc}</p></div>
+    <div class="agregar">
+      <button type="button" data-sabor="${s.id}" data-tamano="docena" aria-label="Agregar docena de ${s.nombre}">+ Docena<small>${pesos(PRECIO.docena)}</small></button>
+      <button type="button" data-sabor="${s.id}" data-tamano="media" aria-label="Agregar media docena de ${s.nombre}">+ Media<small>${pesos(PRECIO.media)}</small></button>
+    </div>`;
+  lista.appendChild(li);
+});
+lista.addEventListener("click", e => {
+  const b = e.target.closest("button[data-sabor]"); if (!b) return;
+  charola.push({tipo:"sabor", tamano:b.dataset.tamano, sabor:b.dataset.sabor});
+  anunciar(`Agregaste ${b.dataset.tamano === "docena" ? "una docena" : "media docena"} de ${porId[b.dataset.sabor].nombre}.`);
+  pintar();
+});
+
+// --- surtida (de 2 en 2) ---
+const pares = Object.fromEntries(SABORES.map(s => [s.id, 0]));
+const tamanoSurtida = () => document.querySelector('input[name="tamano-surtida"]:checked').value;
+const paresMax = () => PIEZAS[tamanoSurtida()] / 2;
+const paresUsados = () => Object.values(pares).reduce((a,b)=>a+b,0);
+
+const listaS = $("lista-surtida");
+SABORES.forEach(s => {
+  const li = document.createElement("li");
+  li.className = "sabor";
+  li.innerHTML = `
+    <span class="punto" style="background:${s.color}" aria-hidden="true"></span>
+    <div><h3>${s.nombre}</h3></div>
+    <div class="contador" role="group" aria-label="Piezas de ${s.nombre}">
+      <button type="button" data-menos="${s.id}" aria-label="Quitar 2 de ${s.nombre}">−</button>
+      <output id="cant-${s.id}">0<small>piezas</small></output>
+      <button type="button" data-mas="${s.id}" aria-label="Agregar 2 de ${s.nombre}">+</button>
+    </div>`;
+  listaS.appendChild(li);
+});
+listaS.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.mas && paresUsados() < paresMax()) pares[b.dataset.mas]++;
+  if (b.dataset.menos && pares[b.dataset.menos] > 0) pares[b.dataset.menos]--;
+  pintarSurtida();
+});
+document.querySelectorAll('input[name="tamano-surtida"]').forEach(r => r.addEventListener("change", () => {
+  // si baja de docena a media y ya se pasó, recorta desde el último sabor
+  let exceso = paresUsados() - paresMax();
+  for (const s of [...SABORES].reverse()) { while (exceso > 0 && pares[s.id] > 0) { pares[s.id]--; exceso--; } }
+  pintarSurtida();
+}));
+$("agregar-surtida").addEventListener("click", () => {
+  if (paresUsados() !== paresMax()) return;
+  const t = tamanoSurtida();
+  charola.push({tipo:"surtida", tamano:t, pares:Object.fromEntries(Object.entries(pares).filter(([,v]) => v > 0))});
+  SABORES.forEach(s => pares[s.id] = 0);
+  anunciar(`Agregaste ${t === "docena" ? "una docena surtida" : "media docena surtida"}.`);
+  pintarSurtida(); pintar();
+});
+function pintarSurtida(){
+  const usados = paresUsados(), max = paresMax(), lleno = usados === max;
+  SABORES.forEach(s => {
+    $("cant-"+s.id).innerHTML = (pares[s.id]*2) + "<small>piezas</small>";
+    listaS.querySelector(`[data-menos="${s.id}"]`).disabled = pares[s.id] === 0;
+    listaS.querySelector(`[data-mas="${s.id}"]`).disabled = lleno;
+  });
+  $("relleno").style.width = (usados / max * 100) + "%";
+  $("texto-progreso").textContent = lleno ? `Lista: ${max*2} piezas` : `Llevas ${usados*2} de ${max*2}`;
+  const b = $("agregar-surtida");
+  b.disabled = !lleno;
+  b.textContent = tamanoSurtida() === "docena" ? "Agregar docena surtida" : "Agregar media surtida";
+}
+
+// --- charola ---
+function colores(p){
+  if (p.tipo === "sabor") return Array(PIEZAS[p.tamano]).fill(porId[p.sabor].color);
+  const out = []; SABORES.forEach(s => { for (let i=0;i<(p.pares[s.id]||0)*2;i++) out.push(s.color); }); return out;
+}
+function titulo(p){
+  if (p.tipo === "sabor") return (p.tamano === "docena" ? "Docena de " : "Media docena de ") + porId[p.sabor].nombre.toLowerCase();
+  return p.tamano === "docena" ? "Docena surtida" : "Media docena surtida";
+}
+function detalle(p){
+  if (p.tipo === "sabor") return "";
+  return SABORES.filter(s => p.pares[s.id]).map(s => `${p.pares[s.id]*2} ${s.nombre.toLowerCase()}`).join(", ");
+}
+function totales(){
+  const piezas = charola.reduce((a,p) => a + PIEZAS[p.tamano], 0);
+  const subtotal = charola.reduce((a,p) => a + PRECIO[p.tamano], 0);
+  return {piezas, subtotal};
+}
+function textoPiezas(p){
+  if (p === 0) return "0 piezas";
+  const d = Math.floor(p/12), m = p % 12;
+  return p + " piezas" + (d ? ` · ${d} ${d===1?"docena":"docenas"}${m?" y media":""}` : " · media docena");
+}
+function pintar(){
+  const {piezas, subtotal} = totales();
+  const ul = $("bandejas"); ul.innerHTML = "";
+  charola.forEach((p, i) => {
+    const li = document.createElement("li");
+    li.className = "bandeja";
+    const c = colores(p);
+    const d = detalle(p);
+    li.innerHTML = `<div class="cab"><div><b>${titulo(p)}</b>${d ? `<small>${d}</small>` : ""}</div><span>${pesos(PRECIO[p.tamano])}</span></div>
+      <div class="huecos" aria-hidden="true">${c.map(x => `<span class="hueco con" style="background:${x}"></span>`).join("")}</div>
+      <button class="quitar" type="button" data-quitar="${i}">Quitar</button>`;
+    ul.appendChild(li);
+  });
+  $("vacio").hidden = charola.length > 0;
+  $("piezas").textContent = textoPiezas(piezas);
+  $("total").textContent = pesos(subtotal);
+  $("total-movil").textContent = pesos(subtotal);
+  $("piezas-movil").textContent = textoPiezas(piezas);
+  $("barra-movil").classList.toggle("visible", charola.length > 0);
+  const ok = piezas >= MIN_MEDIAS*6;
+  $("continuar").disabled = !ok;
+  if (piezas > 0 && !ok) {
+    $("aviso").classList.add("falta");
+    $("aviso").textContent = `Agrega ${MIN_MEDIAS*6 - piezas} piezas más para completar la docena mínima.`;
+  }
+  if (!ok) $("entrega").hidden = true;
+  actualizarWhatsApp();
+}
+$("bandejas").addEventListener("click", e => {
+  const b = e.target.closest("[data-quitar]"); if (!b) return;
+  charola.splice(+b.dataset.quitar, 1);
+  anunciar("Quitaste un paquete de tu charola.");
+  pintar();
+});
+function anunciar(t){ $("aviso").classList.remove("falta"); $("aviso").textContent = t; }
+
+// --- entrega ---
+$("continuar").addEventListener("click", () => {
+  $("entrega").hidden = false;
+  $("entrega").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  $("formulario").nombre.focus({preventScroll:true});
+});
+
+const form = $("formulario");
+const fecha = form.fecha;
+const hoy = new Date(); hoy.setDate(hoy.getDate() + DIAS_ANTICIPACION);
+fecha.min = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,"0")}-${String(hoy.getDate()).padStart(2,"0")}`;
+fecha.value = fecha.min;
+
+$("texto-envio").textContent = ENVIO > 0 ? "Envío " + pesos(ENVIO) : "Costo de envío por confirmar";
+form.addEventListener("change", e => {
+  if (e.target.name === "tipo") $("campo-direccion").hidden = form.tipo.value !== "domicilio";
+  actualizarWhatsApp();
+});
+form.addEventListener("input", actualizarWhatsApp);
+
+function datosPedido(){
+  const f = new FormData(form);
+  return {
+    paquetes: charola,
+    cliente: {nombre: (f.get("nombre")||"").trim(), telefono: (f.get("telefono")||"").replace(/\D/g,""), correo: (f.get("correo")||"").trim()},
+    entrega: {tipo: f.get("tipo"), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), notas: (f.get("notas")||"").trim()}
+  };
+}
+function validar(p){
+  if (totales().piezas < MIN_MEDIAS*6) return "El pedido mínimo es una docena.";
+  if (!p.cliente.nombre) return "Escribe tu nombre.";
+  if (p.cliente.telefono.length < 10) return "Escribe tu WhatsApp a 10 dígitos.";
+  if (p.entrega.tipo === "domicilio" && p.entrega.direccion.length < 10) return "Escribe la dirección completa de entrega.";
+  if (!p.entrega.fecha || p.entrega.fecha < fecha.min) return "Elige una fecha de entrega válida.";
+  return "";
+}
+
+// --- mensaje de WhatsApp (respaldo) ---
+function mensajeWhatsApp(){
+  const p = datosPedido(), {piezas, subtotal} = totales();
+  const lineas = charola.map(p => `• ${titulo(p)}${detalle(p) ? " (" + detalle(p) + ")" : ""}`);
+  let t = "Hola, quiero hacer un pedido de tamales Doña Juana:\n";
+  if (lineas.length) t += lineas.join("\n") + `\nTotal: ${piezas} piezas, ${pesos(subtotal)}`;
+  if (p.cliente.nombre) t += `\nNombre: ${p.cliente.nombre}`;
+  if (p.entrega.fecha && !$("entrega").hidden) t += `\nEntrega: ${p.entrega.tipo === "domicilio" ? "a domicilio" : "paso a recoger"}, ${p.entrega.fecha}`;
+  if (p.entrega.tipo === "domicilio" && p.entrega.direccion) t += `\nDirección: ${p.entrega.direccion}`;
+  if (p.entrega.notas) t += `\nNotas: ${p.entrega.notas}`;
+  return t;
+}
+function actualizarWhatsApp(){
+  const base = "https://wa.me/" + WHATSAPP + "?text=";
+  $("enlace-wa-pedido").href = base + encodeURIComponent(mensajeWhatsApp());
+  const saludo = base + encodeURIComponent("Hola, quiero pedir tamales Doña Juana");
+  $("enlace-wa-top").href = saludo;
+  $("enlace-wa-pie").href = saludo;
+}
+
+// --- pago ---
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const p = datosPedido(), err = validar(p);
+  $("error-form").textContent = err;
+  if (err) return;
+  const btn = $("pagar");
+  btn.disabled = true; btn.textContent = "Abriendo Mercado Pago…";
+  try {
+    const r = await fetch(WORKER_URL + "/checkout", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(p)});
+    const data = await r.json();
+    if (!r.ok || !data.init_point) throw new Error(data.error || "No se pudo iniciar el pago");
+    location.href = data.init_point;
+  } catch (x) {
+    $("error-form").textContent = "No pudimos abrir Mercado Pago. Intenta de nuevo o pide por WhatsApp.";
+    btn.disabled = false; btn.textContent = "Pagar con Mercado Pago";
+  }
+});
+
+// --- mensaje al regresar de Mercado Pago ---
+(function(){
+  const q = new URLSearchParams(location.search).get("pago");
+  if (!q) return;
+  const box = $("estado-pago");
+  const msgs = {
+    exito: ["¡Gracias! Recibimos tu pago", "Te escribiremos por WhatsApp para confirmar la entrega."],
+    pendiente: ["Tu pago está en proceso", "Si pagaste en efectivo en tienda, confirmaremos tu pedido en cuanto se acredite."],
+    error: ["El pago no se completó", "No se hizo ningún cargo. Puedes intentarlo otra vez o pedir por WhatsApp."]
+  };
+  const m = msgs[q]; if (!m) return;
+  box.innerHTML = `<div class="estado-pago" role="status"><h2 class="display">${m[0]}</h2><p>${m[1]}</p></div>`;
+  box.hidden = false;
+  history.replaceState(null, "", location.pathname);
+})();
+
+pintarSurtida();
+pintar();
+</script>
+</body>
+</html>
