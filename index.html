@@ -18,15 +18,17 @@
    en el <script> al final (WHATSAPP, WORKER_URL, SABORES).
    ============================================================ */
 :root{
-  --hoja:#F6E3AE;      /* fondo: hoja de maíz */
+  --hoja:#FAD776;      /* fondo: hoja de maíz */
   --naranja:#FDA70D;   /* naranja del logo */
-  --masa:#FAF1D4;      /* paneles: masa */
+  --masa:#FFF3CC;      /* paneles: masa */
   --mole:#2A1206;      /* texto principal */
   --comal:#6B4A2F;     /* texto secundario */
-  --verde:#2E6A3B;     /* botón principal */
+  --verde:#2E6A3B;
   --verde-osc:#23522D;
+  --rojo:#C0281A;      /* salsa roja: botones y precios */
+  --rojo-osc:#971D12;
   --adobo:#A8321F;     /* precios y avisos */
-  --linea:#CDB57A;
+  --linea:#D9AE45;
   --radio:14px;
 }
 *{box-sizing:border-box}
@@ -43,7 +45,7 @@ a{color:inherit}
 .barra{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
 .barra .marca{font-family:"Alfa Slab One",serif;font-size:20px;text-decoration:none}
 .barra{border-bottom:0}
-body::before{content:"";display:block;height:8px;background:var(--naranja)}
+body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .barra a.wa{font-weight:600;font-size:15px;text-decoration:none;border-bottom:2px solid var(--mole);padding-bottom:1px}
 
 /* ---------- portada ---------- */
@@ -55,10 +57,10 @@ body::before{content:"";display:block;height:8px;background:var(--naranja)}
 .portada p{max-width:40ch;font-size:19px;margin:0 0 24px;color:var(--comal)}
 .precio-grande{display:flex;gap:32px;margin:0 0 28px}
 .precio-grande div{font-weight:600;font-size:15px;color:var(--comal)}
-.precio-grande b{display:block;font-family:"Alfa Slab One",serif;font-weight:400;font-size:40px;color:var(--mole);line-height:1.05}
+.precio-grande b{display:block;font-family:"Alfa Slab One",serif;font-weight:400;font-size:40px;color:var(--rojo);line-height:1.05}
 
-.boton{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;background:var(--verde);color:#fff;font:700 18px/1 "Figtree",sans-serif;padding:18px 26px;border-radius:999px;text-decoration:none;transition:background .15s}
-.boton:hover{background:var(--verde-osc)}
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;background:var(--rojo);color:#fff;font:700 18px/1 "Figtree",sans-serif;padding:18px 26px;border-radius:999px;text-decoration:none;transition:background .15s}
+.boton:hover{background:var(--rojo-osc)}
 .boton[disabled]{background:#9C9275;cursor:not-allowed}
 .boton.secundario{background:transparent;color:var(--mole);border:2px solid var(--mole)}
 .boton.secundario:hover{background:var(--masa)}
@@ -94,7 +96,7 @@ body::before{content:"";display:block;height:8px;background:var(--naranja)}
 .resumen li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted var(--linea)}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 14px}
 .total span{font-weight:600;color:var(--comal)}
-.total b{font-family:"Alfa Slab One",serif;font-weight:400;font-size:34px}
+.total b{font-family:"Alfa Slab One",serif;font-weight:400;font-size:34px;color:var(--rojo)}
 .aviso.falta{color:var(--adobo)}
 .aviso{font-size:15px;font-weight:600;color:var(--verde);min-height:1.5em;margin:0 0 12px}
 .charola .boton{width:100%}
@@ -116,9 +118,9 @@ body::before{content:"";display:block;height:8px;background:var(--naranja)}
 .barra-prog i{background:var(--naranja)}
 .agregar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .agregar button{border:2px solid var(--mole);background:var(--masa);color:var(--mole);border-radius:999px;padding:9px 14px;font:700 15px/1.1 "Figtree",sans-serif;cursor:pointer;text-align:center}
-.agregar button small{display:block;font-weight:500;font-size:12px;color:var(--comal)}
-.agregar button:hover{background:var(--mole);color:var(--masa)}
-.agregar button:hover small{color:var(--hoja)}
+.agregar button small{display:block;font-weight:600;font-size:12px;color:var(--rojo)}
+.agregar button:hover{background:var(--rojo);border-color:var(--rojo);color:#fff}
+.agregar button:hover small{color:#FFE3B0}
 @media (max-width:520px){.sabor.con-botones{grid-template-columns:64px 1fr}.sabor.con-botones .agregar{grid-column:1/-1;justify-content:stretch}.sabor.con-botones .agregar button{flex:1}}
 .tamano legend{margin-bottom:10px}
 .progreso{display:grid;gap:12px;margin-top:20px}
@@ -138,7 +140,7 @@ body::before{content:"";display:block;height:8px;background:var(--naranja)}
 .barra-movil.visible{transform:none}
 .barra-movil b{font-size:18px}
 .barra-movil small{display:block;opacity:.8;font-size:13px}
-.barra-movil .boton{padding:14px 20px;font-size:16px;background:var(--hoja);color:var(--mole)}
+.barra-movil .boton{padding:14px 20px;font-size:16px;background:var(--rojo);color:#fff}
 @media (min-width:900px){.barra-movil{display:none}}
 
 /* ---------- entrega y pago ---------- */
