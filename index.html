@@ -148,11 +148,12 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .barra-prog i{display:block;height:100%;width:0;background:var(--verde);transition:width .2s}
 .progreso p{margin:0;font-weight:600}
 /* bandejas en la charola */
-.bandejas{list-style:none;margin:16px 0;padding:0;display:grid;gap:14px}
-.bandeja{background:var(--hoja);border:2px solid var(--mole);border-radius:14px;padding:12px}
-.bandeja .cab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;font-size:15px}
+.bandejas{list-style:none;margin:16px 0;padding:0;display:grid;gap:0;border-top:2px solid var(--mole)}
+.bandeja{padding:12px 0;border-bottom:1px solid var(--linea)}
+.bandeja .cab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:16px}
+.bandeja .precio{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 .bandeja .cab b{font-weight:700}
-.bandeja .cab small{display:block;color:var(--comal);font-size:13px}
+.bandeja .cab small{display:block;color:var(--comal);font-size:14px;margin-top:2px}
 .bandeja .huecos{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .quitar{border:0;background:none;color:var(--adobo);font:600 14px "Source Sans 3",sans-serif;text-decoration:underline;cursor:pointer;padding:4px 0 0}
 /* barra fija en celular */
@@ -535,11 +536,9 @@ function pintar(){
   charola.forEach((p, i) => {
     const li = document.createElement("li");
     li.className = "bandeja";
-    const c = colores(p);
     const d = detalle(p);
-    li.innerHTML = `<div class="cab"><div><b>${titulo(p)}</b>${d ? `<small>${d}</small>` : ""}</div><span>${pesos(PRECIO[p.tamano])}</span></div>
-      <div class="huecos" aria-hidden="true">${c.map(x => `<span class="hueco con" style="background:${x}"></span>`).join("")}</div>
-      <button class="quitar" type="button" data-quitar="${i}">Quitar</button>`;
+    li.innerHTML = `<div class="cab"><div><b>${titulo(p)}</b><small>${PIEZAS[p.tamano]} piezas${d ? " · " + d : ""}</small></div><span class="precio">${pesos(PRECIO[p.tamano])}</span></div>
+      <button class="quitar" type="button" data-quitar="${i}" aria-label="Quitar ${titulo(p).toLowerCase()}">Quitar</button>`;
     ul.appendChild(li);
   });
   $("vacio").hidden = charola.length > 0;
