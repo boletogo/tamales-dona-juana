@@ -115,14 +115,22 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .miniatura{width:76px;height:76px;border-radius:14px;object-fit:cover;border:2px solid var(--mole);box-shadow:4px 4px 0 var(--c)}
 .miniatura.sin-foto{display:block;background:var(--c)}
 @media (max-width:520px){.sabor.con-botones{grid-template-columns:64px 1fr}.miniatura{width:64px;height:64px}}
-.mesa{margin:0;padding:48px 0 0}
-.mesa img{width:100%;height:auto;border-radius:22px;border:3px solid var(--mole)}
-.mesa figcaption{margin-top:10px;font-size:15px;color:var(--comal)}
-.galeria{display:grid;gap:20px;padding:20px 0 0}
-@media (min-width:640px){.galeria{grid-template-columns:1fr 1fr}}
-.galeria figure{margin:0}
-.galeria img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:22px;border:3px solid var(--mole)}
-.galeria figcaption{margin-top:10px;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:19px;color:var(--mole)}
+.carrusel{margin:0;padding:48px 0 0}
+.carrusel-marco{position:relative;border-radius:22px;border:3px solid var(--mole);overflow:hidden;background:var(--masa)}
+.carrusel-pista{list-style:none;margin:0;padding:0;display:flex;transition:transform .6s ease;touch-action:pan-y}
+.slide{flex:0 0 100%;aspect-ratio:4/3;position:relative}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.carrusel-flecha{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:2px solid var(--mole);background:var(--masa);color:var(--mole);display:grid;place-items:center;cursor:pointer;opacity:.92}
+.carrusel-flecha:hover{background:var(--hoja);opacity:1}
+.carrusel-flecha svg{width:22px;height:22px}
+.carrusel-flecha.ant{left:14px}.carrusel-flecha.sig{right:14px}
+@media (max-width:520px){.carrusel-flecha{width:40px;height:40px}.carrusel-flecha.ant{left:8px}.carrusel-flecha.sig{right:8px}}
+.carrusel-pie{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
+.carrusel-pie p{margin:0;font-size:15px;color:var(--comal)}
+.puntos{display:flex;flex-wrap:wrap;gap:4px}
+.puntos button{width:28px;height:28px;border:0;background:transparent;padding:0;cursor:pointer;display:grid;place-items:center}
+.puntos button::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--linea);transition:background .2s,transform .2s}
+.puntos button[aria-current="true"]::before{background:var(--mole);transform:scale(1.25)}
 /* modos de pedido */
 .modos{display:inline-flex;border:2px solid var(--mole);border-radius:999px;padding:4px;margin:0 0 22px;background:var(--masa)}
 .modos button{border:0;background:transparent;color:var(--mole);font:700 16px/1 "Source Sans 3",sans-serif;padding:12px 20px;border-radius:999px;cursor:pointer}
@@ -225,20 +233,29 @@ footer p{margin:4px 0}
       <a class="boton" href="#pedido">Arma tu pedido</a>
     </div>
   </section>
-  <figure class="mesa">
-    <img src="foto-mesa-roja.webp" width="1400" height="1050" alt="Una bolsa de tamales Doña Juana junto a un plato de tamales bañados en salsa roja" loading="lazy">
-    <figcaption>Los entregamos en bolsa, listos para calentar en vaporera o microondas.</figcaption>
-  </figure>
-  <div class="galeria">
-    <figure>
-      <img src="foto-mesa-verde.webp" width="1400" height="1050" alt="Bolsa de tamales Doña Juana junto a un plato de tamales con salsa verde y frijoles" loading="lazy">
-      <figcaption>Con salsa verde y frijoles</figcaption>
-    </figure>
-    <figure>
-      <img src="foto-mesa-frijoles.webp" width="1254" height="1254" alt="Bolsa de tamales Doña Juana junto a un plato con tres tamales y frijoles con queso" loading="lazy">
-      <figcaption>Con frijolitos y queso</figcaption>
-    </figure>
-  </div>
+  <section class="carrusel" aria-roledescription="carrusel" aria-label="Fotos de nuestros tamales">
+    <div class="carrusel-marco">
+      <ul class="carrusel-pista" id="pista">
+        <li class="slide"><img src="carrusel-01.webp" alt="Salsas verde y roja Doña Juana junto a bolsas de tamales de puerco y de frijoles con chorizo y manchego, y un plato de tamales con frijoles" decoding="async"></li>
+        <li class="slide"><img src="carrusel-02.webp" alt="Bolsa de tamales junto a un plato de tamales bañados en salsa roja" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-03.webp" alt="Bolsa de media docena de tamales junto a un plato con salsa verde y frijoles" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-04.webp" alt="Bolsa de tamales junto a un plato con tres tamales y frijoles con queso" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-05.webp" alt="Tres tamales en salsa roja en plato de barro con salsa verde y café de olla" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-06.webp" alt="Tres tamales destapados sobre hojas de maíz en plato de barro" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-07.webp" alt="Bolsa de tamales de puerco Doña Juana junto a un plato de tamales en salsa roja" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-08.webp" alt="Bolsa de tamales junto a un plato de tamales en salsa con frijoles y queso" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-09.webp" alt="Bolsa de media docena de tamales junto a un plato de tamales en salsa roja" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-10.webp" alt="Tres tamales bañados en salsa roja en plato blanco" loading="lazy" decoding="async"></li>
+        <li class="slide"><img src="carrusel-11.webp" alt="Tres tamales en salsa verde con una taza de café" loading="lazy" decoding="async"></li>
+      </ul>
+      <button class="carrusel-flecha ant" type="button" id="ant" aria-label="Foto anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="carrusel-flecha sig" type="button" id="sig" aria-label="Foto siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+    <div class="carrusel-pie">
+      <p>Los entregamos en bolsa, listos para calentar en vaporera o microondas.</p>
+      <div class="puntos" id="puntos"></div>
+    </div>
+  </section>
 </div>
 
 <div class="envoltura">
@@ -683,6 +700,42 @@ form.addEventListener("submit", async e => {
   box.innerHTML = `<div class="estado-pago" role="status"><h2 class="display">${m[0]}</h2><p>${m[1]}</p></div>`;
   box.hidden = false;
   history.replaceState(null, "", location.pathname);
+})();
+
+// --- carrusel de fotos ---
+(function(){
+  const pista = $("pista"), slides = [...pista.children], n = slides.length, puntos = $("puntos");
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let i = 0, timer = null, pausa = false;
+  slides.forEach((s, k) => {
+    s.setAttribute("aria-roledescription", "foto"); s.setAttribute("aria-label", `${k+1} de ${n}`);
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Ver foto ${k+1}`);
+    b.addEventListener("click", () => { ir(k); reiniciar(); }); puntos.appendChild(b);
+  });
+  function ir(k){
+    i = (k + n) % n;
+    pista.style.transform = `translateX(${-i*100}%)`;
+    slides.forEach((s, k2) => s.setAttribute("aria-hidden", k2 !== i));
+    [...puntos.children].forEach((b, k2) => b.setAttribute("aria-current", k2 === i));
+    const sig = slides[(i+1) % n].querySelector("img"); if (sig) sig.loading = "eager";
+  }
+  function reiniciar(){ clearInterval(timer); if (!quieto && !pausa) timer = setInterval(() => ir(i+1), 4500); }
+  $("ant").addEventListener("click", () => { ir(i-1); reiniciar(); });
+  $("sig").addEventListener("click", () => { ir(i+1); reiniciar(); });
+  const marco = pista.parentElement;
+  marco.addEventListener("mouseenter", () => { pausa = true; reiniciar(); });
+  marco.addEventListener("mouseleave", () => { pausa = false; reiniciar(); });
+  marco.addEventListener("focusin", () => { pausa = true; reiniciar(); });
+  marco.addEventListener("focusout", () => { pausa = false; reiniciar(); });
+  document.addEventListener("visibilitychange", () => { pausa = document.hidden; reiniciar(); });
+  let x0 = null;
+  pista.addEventListener("pointerdown", e => { x0 = e.clientX; });
+  pista.addEventListener("pointerup", e => {
+    if (x0 === null) return; const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) { ir(dx < 0 ? i+1 : i-1); reiniciar(); }
+  });
+  pista.addEventListener("pointercancel", () => { x0 = null; });
+  ir(0); reiniciar();
 })();
 
 pintarSurtida();
