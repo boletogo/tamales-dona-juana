@@ -116,13 +116,18 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .miniatura.sin-foto{display:block;background:var(--c)}
 @media (max-width:520px){.sabor.con-botones{grid-template-columns:64px 1fr}.miniatura{width:64px;height:64px}}
 .carrusel{margin:0;padding:40px 0 0}
-.carrusel-marco{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.carrusel-pista{list-style:none;margin:0;padding:0;display:flex;gap:16px;width:max-content;animation:desfile 60s linear infinite}
-@keyframes desfile{to{transform:translateX(calc(-50% - 8px))}}
-.slide{flex:none}
-.slide img{height:220px;width:auto;border-radius:14px;border:2px solid var(--mole);user-select:none;-webkit-user-drag:none}
-@media (max-width:640px){.slide img{height:150px}.carrusel-pista{gap:12px;animation-duration:45s}@keyframes desfile{to{transform:translateX(calc(-50% - 6px))}}}
-@media (prefers-reduced-motion:reduce){.carrusel-marco{overflow-x:auto}}
+.carrusel-marco{position:relative;padding:0 8px}
+.carrusel-pista{list-style:none;margin:0;padding:4px 0 8px;display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain}
+.carrusel-pista::-webkit-scrollbar{display:none}
+.slide{flex:0 0 calc((100% - 4*20px)/5);scroll-snap-align:start}
+.slide img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:16px;box-shadow:0 6px 18px rgba(42,18,6,.18);user-select:none;-webkit-user-drag:none}
+@media (max-width:1000px){.slide{flex-basis:calc((100% - 2*20px)/3)}}
+@media (max-width:600px){.carrusel-pista{gap:14px}.slide{flex-basis:calc((100% - 14px)/1.6)}}
+.carrusel-flecha{position:absolute;top:calc(50% - 4px);transform:translateY(-50%);z-index:2;width:52px;height:52px;border-radius:50%;border:0;background:var(--rojo);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 12px rgba(42,18,6,.3);transition:background .15s}
+.carrusel-flecha:hover{background:var(--rojo-osc)}
+.carrusel-flecha svg{width:24px;height:24px}
+.carrusel-flecha.ant{left:-14px}.carrusel-flecha.sig{right:-14px}
+@media (max-width:600px){.carrusel-flecha{width:42px;height:42px}.carrusel-flecha.ant{left:-4px}.carrusel-flecha.sig{right:-4px}}
 .carrusel-pie{margin:12px 0 0;font-size:15px;color:var(--comal)}
 /* modos de pedido */
 .modos{display:inline-flex;border:2px solid var(--mole);border-radius:999px;padding:4px;margin:0 0 22px;background:var(--masa)}
@@ -242,6 +247,8 @@ footer p{margin:4px 0}
         <li class="slide"><img src="carrusel-10.webp" alt="Tres tamales bañados en salsa roja en plato blanco" decoding="async"></li>
         <li class="slide"><img src="carrusel-11.webp" alt="Tres tamales en salsa verde con una taza de café" decoding="async"></li>
       </ul>
+      <button class="carrusel-flecha ant" type="button" id="ant" aria-label="Fotos anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="carrusel-flecha sig" type="button" id="sig" aria-label="Fotos siguientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
     </div>
     <p class="carrusel-pie">Los entregamos en bolsa, listos para calentar en vaporera o microondas.</p>
   </section>
@@ -689,10 +696,24 @@ form.addEventListener("submit", async e => {
   history.replaceState(null, "", location.pathname);
 })();
 
-// --- carrusel de fotos: se duplica la tira para que el desfile no tenga corte ---
+// --- carrusel de fotos: avanza solo una foto cada 3 segundos ---
 (function(){
   const pista = $("pista");
-  [...pista.children].forEach(li => { const c = li.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.querySelector("img").alt = ""; pista.appendChild(c); });
+  const paso = () => pista.children[0].getBoundingClientRect().width + parseFloat(getComputedStyle(pista).columnGap || 20);
+  const alFinal = () => pista.scrollLeft + pista.clientWidth >= pista.scrollWidth - 5;
+  function mover(dir){
+    if (dir > 0 && alFinal()) pista.scrollTo({left:0});
+    else if (dir < 0 && pista.scrollLeft <= 5) pista.scrollTo({left:pista.scrollWidth});
+    else pista.scrollBy({left:dir*paso()});
+  }
+  let timer = null;
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function reiniciar(){ clearInterval(timer); if (!quieto && !document.hidden) timer = setInterval(() => mover(1), 3000); }
+  $("ant").addEventListener("click", () => { mover(-1); reiniciar(); });
+  $("sig").addEventListener("click", () => { mover(1); reiniciar(); });
+  pista.addEventListener("touchstart", reiniciar, {passive:true});
+  document.addEventListener("visibilitychange", reiniciar);
+  reiniciar();
 })();
 
 pintarSurtida();
