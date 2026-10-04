@@ -15,7 +15,7 @@
 <style>
 /* ============================================================
    CONFIGURACIÓN RÁPIDA: los datos que cambias seguido están
-   en el <script> al final (WHATSAPP, WORKER_URL, SABORES).
+   en el <script> al final (WHATSAPP, API_URL, SABORES).
    ============================================================ */
 :root{
   --hoja:#FAD776;      /* fondo: hoja de maíz */
@@ -381,8 +381,8 @@ footer p{margin:4px 0}
 /* =================== CONFIGURACIÓN =================== */
 // Tu WhatsApp con 52 + 10 dígitos, sin espacios. Ej: "5215512345678"
 const WHATSAPP = "525584625578";
-// Dirección del puente de cobro en Cloudflare (la llenamos al publicarlo)
-const WORKER_URL = "https://PENDIENTE.workers.dev";
+// Dirección del proyecto en Vercel que cobra con Mercado Pago (sin diagonal al final)
+const API_URL = "https://tamales-dona-juana.vercel.app";
 // Costo de envío a domicilio en pesos (0 = sin costo). Debe coincidir con el del puente.
 // Los costos de envío y las distancias por código postal están en envios.json
 const PRECIO_MEDIA = 100;     // precio por media docena
@@ -670,7 +670,7 @@ form.addEventListener("submit", async e => {
   const btn = $("pagar");
   btn.disabled = true; btn.textContent = "Abriendo Mercado Pago…";
   try {
-    const r = await fetch(WORKER_URL + "/checkout", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(p)});
+    const r = await fetch(API_URL + "/api/checkout", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(p)});
     const data = await r.json();
     if (!r.ok || !data.init_point) throw new Error(data.error || "No se pudo iniciar el pago");
     location.href = data.init_point;
@@ -686,7 +686,7 @@ form.addEventListener("submit", async e => {
   if (!q) return;
   const box = $("estado-pago");
   const msgs = {
-    exito: ["¡Gracias! Recibimos tu pago", "Te escribiremos por WhatsApp para confirmar la entrega."],
+    exito: ["¡Gracias! Recibimos tu pago", "Ya tenemos tu pedido. Te escribiremos por WhatsApp para confirmar la entrega."],
     pendiente: ["Tu pago está en proceso", "Si pagaste en efectivo en tienda, confirmaremos tu pedido en cuanto se acredite."],
     error: ["El pago no se completó", "No se hizo ningún cargo. Puedes intentarlo otra vez o pedir por WhatsApp."]
   };
