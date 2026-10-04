@@ -1,22 +1,52 @@
 // Mercado Pago avisa aquí cuando cambia un pago. Si quedó aprobado:
-// marca el pedido como "pagado" en Supabase y te manda el pedido por WhatsApp (CallMeBot).
-// Variables en Vercel: MP_ACCESS_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_KEY,
-//                      CALLMEBOT_PHONE, CALLMEBOT_APIKEY
+// marca el pedido como "pagado" en Supabase y te avisa por los canales que tengas configurados.
+// Variables en Vercel (obligatorias): MP_ACCESS_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_KEY
+// Avisos (pon las de los canales que quieras usar; los que no tengan variables se saltan):
+//   Correo:    RESEND_API_KEY, AVISO_CORREO_PARA, AVISO_CORREO_DE  (ej. "Doña Juana <pedidos@boletogo.com.mx>")
+//   Telegram:  TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+//   WhatsApp:  CALLMEBOT_PHONE, CALLMEBOT_APIKEY
 
 const pesos = n => "$" + Number(n).toLocaleString("es-MX");
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function fechaBonita(iso) {
   const [a, m, d] = iso.split("-").map(Number);
   return new Date(Date.UTC(a, m - 1, d, 12)).toLocaleDateString("es-MX", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
 }
 
+async function avisarCorreo(asunto, texto) {
+  const key = process.env.RESEND_API_KEY, para = process.env.AVISO_CORREO_PARA;
+  if (!key || !para) return;
+  const r = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      from: process.env.AVISO_CORREO_DE || "Doña Juana <onboarding@resend.dev>",
+      to: para.split(",").map(x => x.trim()),
+      subject: asunto,
+      html: `<pre style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;white-space:pre-wrap">${esc(texto)}</pre>`,
+    }),
+  });
+  if (!r.ok) console.error("Resend falló:", await r.text()); else console.log("Correo enviado");
+}
+
+async function avisarTelegram(texto) {
+  const tok = process.env.TELEGRAM_BOT_TOKEN, chat = process.env.TELEGRAM_CHAT_ID;
+  if (!tok || !chat) return;
+  const r = await fetch(`https://api.telegram.org/bot${tok}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chat, text: texto, disable_web_page_preview: true }),
+  });
+  if (!r.ok) console.error("Telegram falló:", await r.text()); else console.log("Telegram enviado");
+}
+
 async function avisarWhatsApp(texto) {
   const phone = process.env.CALLMEBOT_PHONE, apikey = process.env.CALLMEBOT_APIKEY;
-  if (!phone || !apikey) { console.error("Faltan CALLMEBOT_PHONE o CALLMEBOT_APIKEY"); return; }
+  if (!phone || !apikey) return;
   const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(texto)}&apikey=${encodeURIComponent(apikey)}`;
   const r = await fetch(url);
-  if (!r.ok) console.error("CallMeBot falló:", r.status, await r.text());
-  else console.log("WhatsApp enviado");
+  if (!r.ok) console.error("CallMeBot falló:", r.status, await r.text()); else console.log("WhatsApp enviado");
 }
 
 export default async function handler(req, res) {
@@ -80,7 +110,8 @@ Tamales ${pesos(p.subtotal)}${p.envio ? ` + envío ${pesos(p.envio)}` : ""} = ${
 👤 ${p.nombre}
 📱 wa.me/52${p.telefono}${p.notas ? `\n📝 ${p.notas}` : ""}`;
 
-    await avisarWhatsApp(texto);
+    const asunto = `Nuevo pedido ${p.codigo}: ${p.piezas} tamales para ${fechaBonita(p.fecha_entrega)}`;
+    await Promise.allSettled([avisarCorreo(asunto, texto), avisarTelegram(texto), avisarWhatsApp(texto)]);
     return res.status(200).json({ received: true });
   } catch (err) {
     console.error("Error en webhook:", err);
