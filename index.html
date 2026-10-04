@@ -11,14 +11,14 @@
 <meta property="og:image" content="https://xn--tamalesdoajuana-6qb.com/foto-mesa-roja.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Kaushan+Script&family=Montserrat:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    CONFIGURACIÓN RÁPIDA: los datos que cambias seguido están
    en el <script> al final (WHATSAPP, API_URL, SABORES).
    ============================================================ */
 :root{
-  --hoja:#FAD776;      /* fondo: hoja de maíz */
+  --hoja:#FEC519;      /* fondo: amarillo del diseño */
   --naranja:#FDA70D;   /* naranja del logo */
   --masa:#FFF3CC;      /* paneles: masa */
   --mole:#2A1206;      /* texto principal */
@@ -28,7 +28,7 @@
   --rojo:#C0281A;      /* salsa roja: botones y precios */
   --rojo-osc:#971D12;
   --adobo:#A8321F;     /* precios y avisos */
-  --linea:#D9AE45;
+  --linea:#D99A12;
   --radio:14px;
 }
 *{box-sizing:border-box}
@@ -40,11 +40,11 @@ img{max-width:100%;display:block}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--verde);outline-offset:3px;border-radius:6px}
 .envoltura{max-width:1120px;margin:0 auto;padding:0 20px}
-.display{font-family:"Playfair Display",Georgia,serif;font-weight:700;letter-spacing:-.01em;line-height:1.08;text-wrap:balance}
+.display{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;letter-spacing:0;line-height:1.05;text-wrap:balance}
 
 /* ---------- barra superior ---------- */
 .barra{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
-.barra .marca{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:24px;text-decoration:none}
+.barra .marca{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:24px;text-decoration:none}
 .barra{border-bottom:0}
 body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .barra a.wa{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:16px;text-decoration:none;background:#1E8E4A;color:#fff;padding:11px 18px;border-radius:999px}
@@ -56,16 +56,43 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .wa-flotante svg{width:34px;height:34px}
 @media (max-width:899px){body.con-barra .wa-flotante{bottom:92px}}
 
-/* ---------- portada ---------- */
-.portada{display:grid;gap:28px;align-items:center;padding:12px 0 56px;border-bottom:3px solid var(--mole)}
-@media (min-width:820px){.portada{grid-template-columns:minmax(260px,420px) 1fr;gap:56px;padding:24px 0 64px}}
-.logo{width:min(360px,78vw);height:auto;margin:0 auto;filter:drop-shadow(0 6px 0 rgba(42,18,6,.18))}
-@media (min-width:820px){.logo{width:100%}}
-.portada h1{font-size:clamp(42px,6.4vw,76px);margin:0 0 18px;max-width:14ch}
-.portada p{max-width:40ch;font-size:19px;margin:0 0 24px;color:var(--comal)}
-.precio-grande{display:flex;gap:32px;margin:0 0 28px}
-.precio-grande div{font-weight:600;font-size:15px;color:var(--comal)}
-.precio-grande b{display:block;font-family:"Playfair Display",Georgia,serif;font-weight:700;font-variant-numeric:lining-nums;font-size:40px;color:var(--rojo);line-height:1.05}
+/* ---------- portada (diseño Doña Juana) ---------- */
+.portada{position:relative;overflow:hidden;background:var(--hoja);border-bottom:3px solid var(--mole)}
+.portada .deco{position:absolute;pointer-events:none;user-select:none;z-index:0}
+.deco-esquina{left:0;top:0;width:clamp(120px,15vw,250px)}
+.deco-plato{left:0;bottom:0;width:clamp(260px,42vw,640px)}
+.deco-elote{right:0;bottom:0;width:clamp(80px,10vw,170px)}
+.deco-granos{right:0;top:0;width:clamp(90px,11vw,185px)}
+.portada-int{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:28px 20px 40px;display:grid;gap:24px;align-items:center}
+@media (min-width:860px){.portada-int{grid-template-columns:minmax(260px,430px) 1fr;gap:48px;padding:40px 20px 210px}}
+.logo{width:min(360px,86vw);height:auto;margin:0 auto;filter:drop-shadow(0 8px 14px rgba(42,18,6,.22))}
+@media (min-width:860px){.logo{width:100%;margin-top:-10px}}
+.portada-texto{text-align:center}
+@media (min-width:860px){.portada-texto{text-align:left}}
+.portada h1{margin:0;font-family:"Alfa Slab One",Georgia,serif;font-weight:400;line-height:.95;letter-spacing:.005em;text-shadow:0 2px 0 rgba(42,18,6,.12)}
+.portada h1 .t1{display:block;color:#3A1C0C;font-size:clamp(58px,9vw,118px)}
+.portada h1 .t2{display:block;color:#A3170E;font-size:clamp(58px,9vw,118px)}
+.portada h1 .t3{display:block;color:#3A1C0C;font-family:"Kaushan Script",cursive;font-size:clamp(34px,4.6vw,62px);line-height:1.2;margin-top:6px}
+.subrayado{display:block;width:min(100%,520px);height:16px;margin:0 auto 18px}
+@media (min-width:860px){.subrayado{margin:0 0 18px 60px}}
+.portada p.lema{font-family:"Montserrat",system-ui,sans-serif;font-weight:600;font-size:clamp(17px,1.6vw,21px);line-height:1.35;color:#2A1206;max-width:32ch;margin:0 auto 22px}
+@media (min-width:860px){.portada p.lema{margin-left:0}}
+.precios{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:0 0 22px}
+@media (min-width:860px){.precios{justify-content:flex-start}}
+.precio{position:relative;min-width:150px;padding:10px 26px 12px;border-radius:14px;text-align:center;font-family:"Montserrat",sans-serif;font-weight:700;font-size:20px;line-height:1.1;box-shadow:0 4px 0 rgba(42,18,6,.18)}
+.precio b{display:block;font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:clamp(40px,4.4vw,58px);line-height:1.05}
+.precio.rojo{background:#A3170E;color:#fff}
+.precio.crema{background:#FFF1D2;color:#2A1206}
+.precio.crema b{color:#A3170E}
+.boton.grande{font-family:"Montserrat",sans-serif;font-weight:800;font-size:clamp(18px,1.8vw,24px);letter-spacing:.02em;text-transform:uppercase;padding:20px 40px;background:#A3170E;box-shadow:0 5px 0 rgba(42,18,6,.25)}
+.boton.grande:hover{background:#7E110A}
+.boton.grande svg{width:24px;height:24px}
+.entrega-cdmx{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px 0 0;font-family:"Montserrat",sans-serif;font-weight:600;font-size:16px;color:#2A1206}
+@media (min-width:860px){.entrega-cdmx{justify-content:flex-start;margin-left:40px}}
+.entrega-cdmx::before,.entrega-cdmx::after{content:"";width:28px;height:2px;background:#2A1206}
+.entrega-cdmx svg{width:34px;height:26px;flex:none}
+@media (max-width:520px){.entrega-cdmx::before,.entrega-cdmx::after{display:none}}
+@media (max-width:859px){.deco-plato{opacity:.35}.deco-elote,.deco-granos{opacity:.5}}
 
 .boton{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;background:var(--rojo);color:#fff;font:700 18px/1 "Source Sans 3",sans-serif;padding:18px 26px;border-radius:999px;text-decoration:none;transition:background .15s}
 .boton:hover{background:var(--rojo-osc)}
@@ -104,7 +131,7 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .resumen li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted var(--linea)}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 14px}
 .total span{font-weight:600;color:var(--comal)}
-.total b{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-variant-numeric:lining-nums;font-size:34px;color:var(--rojo)}
+.total b{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-variant-numeric:lining-nums;font-size:34px;color:var(--rojo)}
 .aviso.falta{color:var(--adobo)}
 .aviso{font-size:15px;font-weight:600;color:var(--verde);min-height:1.5em;margin:0 0 12px}
 .charola .boton{width:100%}
@@ -192,7 +219,7 @@ legend{font-weight:600;font-size:15px;margin-bottom:6px}
 .cuenta{border-top:2px solid var(--mole);padding-top:12px;display:grid;gap:4px;max-width:360px}
 .cuenta div{display:flex;justify-content:space-between}
 .cuenta .c-total{margin-top:4px;font-weight:700}
-.cuenta .c-total b{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-variant-numeric:lining-nums;font-size:30px;color:var(--rojo)}
+.cuenta .c-total b{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-variant-numeric:lining-nums;font-size:30px;color:var(--rojo)}
 .acciones{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:6px}
 .error{color:var(--adobo);font-weight:600;margin:0}
 .seguro{font-size:14px;color:var(--comal);margin:0}
@@ -205,7 +232,7 @@ legend{font-weight:600;font-size:15px;margin-bottom:6px}
 footer{background:var(--mole);color:var(--masa);padding:40px 0 110px}
 @media (min-width:900px){footer{padding-bottom:40px}}
 footer .envoltura{display:flex;flex-wrap:wrap;gap:20px 40px;justify-content:space-between}
-footer .marca{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:26px}
+footer .marca{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:26px}
 footer a{color:var(--hoja)}
 footer p{margin:4px 0}
 </style>
@@ -220,18 +247,30 @@ footer p{margin:4px 0}
 
   <div id="estado-pago" hidden></div>
 
-  <section class="portada" aria-labelledby="titulo">
+</div>
+
+<section class="portada" aria-labelledby="titulo">
+  <img class="deco deco-esquina" src="deco-esquina.webp" alt="" aria-hidden="true">
+  <img class="deco deco-granos" src="deco-granos.webp" alt="" aria-hidden="true">
+  <img class="deco deco-plato" src="deco-plato.webp" alt="" aria-hidden="true">
+  <img class="deco deco-elote" src="deco-elote.webp" alt="" aria-hidden="true">
+  <div class="portada-int">
     <img class="logo" src="logo.webp" width="560" height="560" alt="Doña Juana, tamales norteños, receta tradicional">
     <div class="portada-texto">
-      <h1 id="titulo" class="display">Tamales norteños hechos en casa</h1>
-      <p>Siete sabores de receta tradicional, en la Ciudad de México. Pídelos por docena, media docena o surtidos, y paga en línea.</p>
-      <div class="precio-grande">
-        <div><b>$200</b>la docena</div>
-        <div><b>$100</b>media docena</div>
+      <h1 id="titulo"><span class="t1">Tamales</span><span class="t2">norteños</span><span class="t3">hechos en casa</span></h1>
+      <svg class="subrayado" viewBox="0 0 520 16" preserveAspectRatio="none" aria-hidden="true"><path d="M4 11 C120 4 300 2 516 6" stroke="#A3170E" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M40 13 C200 9 360 8 500 10" stroke="#A3170E" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg>
+      <p class="lema">Siete sabores de receta tradicional, preparados en la Ciudad de México.</p>
+      <div class="precios">
+        <div class="precio rojo"><b>$200</b>la docena</div>
+        <div class="precio crema"><b>$100</b>½ docena</div>
       </div>
-      <a class="boton" href="#pedido">Arma tu pedido</a>
+      <a class="boton grande" href="#pedido">Arma tu pedido <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <p class="entrega-cdmx"><svg viewBox="0 0 34 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h19v14H2zM21 9h6l4 5v4h-10z"/><circle cx="8" cy="20" r="3" fill="#FEC519"/><circle cx="25" cy="20" r="3" fill="#FEC519"/></svg>Entrega a domicilio en CDMX</p>
     </div>
-  </section>
+  </div>
+</section>
+
+<div class="envoltura">
   <section class="carrusel" aria-roledescription="carrusel" aria-label="Fotos de nuestros tamales">
     <div class="carrusel-marco">
       <ul class="carrusel-pista" id="pista">
