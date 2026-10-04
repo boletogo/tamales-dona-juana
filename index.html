@@ -673,6 +673,9 @@ form.addEventListener("submit", async e => {
     const r = await fetch(API_URL + "/api/checkout", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(p)});
     const data = await r.json();
     if (!r.ok || !data.init_point) throw new Error(data.error || "No se pudo iniciar el pago");
+    try {
+      localStorage.setItem("pedido-wa", JSON.stringify({codigo: data.codigo || "", texto: mensajeWhatsApp(), t: Date.now()}));
+    } catch (_) {}
     location.href = data.init_point;
   } catch (x) {
     $("error-form").textContent = "No pudimos abrir Mercado Pago. Intenta de nuevo o pide por WhatsApp.";
@@ -686,12 +689,24 @@ form.addEventListener("submit", async e => {
   if (!q) return;
   const box = $("estado-pago");
   const msgs = {
-    exito: ["¡Gracias! Recibimos tu pago", "Ya tenemos tu pedido. Te escribiremos por WhatsApp para confirmar la entrega."],
+    exito: ["¡Gracias! Recibimos tu pago", "Último paso: mándanos tu pedido por WhatsApp para confirmar la entrega."],
     pendiente: ["Tu pago está en proceso", "Si pagaste en efectivo en tienda, confirmaremos tu pedido en cuanto se acredite."],
     error: ["El pago no se completó", "No se hizo ningún cargo. Puedes intentarlo otra vez o pedir por WhatsApp."]
   };
   const m = msgs[q]; if (!m) return;
-  box.innerHTML = `<div class="estado-pago" role="status"><h2 class="display">${m[0]}</h2><p>${m[1]}</p></div>`;
+  // Al regresar pagado: abrir WhatsApp con el pedido ya escrito (el cliente solo toca "Enviar")
+  let guardado = null;
+  try { guardado = JSON.parse(localStorage.getItem("pedido-wa") || "null"); } catch (_) {}
+  if (guardado && Date.now() - guardado.t > 6*60*60*1000) guardado = null;   // más de 6 h: ya no aplica
+  let extra = "";
+  if (q === "exito" && guardado) {
+    const texto = `✅ PAGADO con Mercado Pago${guardado.codigo ? " · Pedido " + guardado.codigo : ""}\n` + guardado.texto.replace(/^Hola, quiero hacer un pedido/, "Hola, acabo de pagar mi pedido");
+    const url = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(texto);
+    extra = `<p style="margin-top:16px"><a class="boton" id="wa-confirmar" href="${url}" target="_blank" rel="noopener">Enviar mi pedido por WhatsApp</a></p>
+      <p style="font-size:15px;margin-top:8px">Se abrirá WhatsApp con tu pedido escrito; solo toca <b>Enviar</b>.</p>`;
+    setTimeout(() => { try { localStorage.removeItem("pedido-wa"); } catch (_) {} location.href = url; }, 2500);
+  }
+  box.innerHTML = `<div class="estado-pago" role="status"><h2 class="display">${m[0]}</h2><p>${m[1]}</p>${extra}</div>`;
   box.hidden = false;
   history.replaceState(null, "", location.pathname);
 })();
