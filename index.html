@@ -77,7 +77,7 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 @media (min-width:860px){.subrayado{margin:0 0 18px 60px}}
 .portada p.lema{font-family:"Montserrat",system-ui,sans-serif;font-weight:600;font-size:clamp(17px,1.6vw,21px);line-height:1.35;color:#2A1206;max-width:32ch;margin:0 auto 22px}
 @media (min-width:860px){.portada p.lema{margin-left:0}}
-.precios{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:0 0 22px}
+.precios{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
 @media (min-width:860px){.precios{justify-content:flex-start}}
 .precio{position:relative;min-width:150px;padding:10px 26px 12px;border-radius:14px;text-align:center;font-family:"Montserrat",sans-serif;font-weight:700;font-size:20px;line-height:1.1;box-shadow:0 4px 0 rgba(42,18,6,.18)}
 .precio b{display:block;font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:clamp(40px,4.4vw,58px);line-height:1.05}
@@ -93,6 +93,17 @@ body::before{content:"";display:block;height:10px;background:var(--rojo)}
 .entrega-cdmx svg{width:34px;height:26px;flex:none}
 @media (max-width:520px){.entrega-cdmx::before,.entrega-cdmx::after{display:none}}
 @media (max-width:859px){.deco-plato{opacity:.35}.deco-elote,.deco-granos{opacity:.5}}
+
+/* ---------- aviso de descuento por pagar en línea ---------- */
+@keyframes pulso-descuento{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+.ribbon-descuento{position:absolute;top:22px;right:-52px;z-index:3;background:#1E8E4A;color:#fff;font-family:"Montserrat",sans-serif;font-weight:800;font-size:14px;letter-spacing:.03em;text-transform:uppercase;line-height:1.3;text-align:center;padding:10px 58px;transform:rotate(18deg);box-shadow:0 4px 10px rgba(42,18,6,.3);pointer-events:none}
+@media (max-width:680px){.ribbon-descuento{display:none}}
+.franja-descuento{display:inline-flex;align-items:center;gap:10px;background:#1E8E4A;color:#fff;font-family:"Montserrat",sans-serif;font-weight:800;font-size:clamp(14px,1.5vw,17px);padding:12px 22px;border-radius:999px;margin:0 auto 20px;box-shadow:0 4px 0 rgba(42,18,6,.25);text-align:center;animation:pulso-descuento 2.4s ease-in-out infinite}
+@media (min-width:860px){.franja-descuento{margin:0 0 20px}}
+.franja-descuento svg{width:22px;height:22px;flex:none}
+.franja-descuento b{font-weight:800}
+.cuenta .c-desc{color:#1E8E4A;font-weight:700}
+.boton.grande.con-descuento small,.boton.con-descuento small{display:block;font-weight:700;font-size:13px;opacity:.9;text-transform:none;letter-spacing:0}
 
 .boton{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;background:var(--rojo);color:#fff;font:700 18px/1 "Source Sans 3",sans-serif;padding:18px 26px;border-radius:999px;text-decoration:none;transition:background .15s}
 .boton:hover{background:var(--rojo-osc)}
@@ -254,6 +265,7 @@ footer p{margin:4px 0}
   <img class="deco deco-granos" src="deco-granos.webp" alt="" aria-hidden="true">
   <img class="deco deco-plato" src="deco-plato.webp" alt="" aria-hidden="true">
   <img class="deco deco-elote" src="deco-elote.webp" alt="" aria-hidden="true">
+  <div class="ribbon-descuento" aria-hidden="true">10% OFF<br>pagando en línea</div>
   <div class="portada-int">
     <img class="logo" src="logo.webp" width="560" height="560" alt="Doña Juana, tamales norteños, receta tradicional">
     <div class="portada-texto">
@@ -264,6 +276,7 @@ footer p{margin:4px 0}
         <div class="precio rojo"><b>$200</b>la docena</div>
         <div class="precio crema"><b>$100</b>½ docena</div>
       </div>
+      <p class="franja-descuento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24L4 3a1 1 0 0 0-1 1l.24 5.59a2 2 0 0 0 .59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.35-4.35a2 2 0 0 0 0-2.83Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg><b>10% de descuento</b> pagando aquí con Mercado Pago</p>
       <a class="boton grande" href="#pedido">Arma tu pedido <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <p class="entrega-cdmx"><svg viewBox="0 0 34 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h19v14H2zM21 9h6l4 5v4h-10z"/><circle cx="8" cy="20" r="3" fill="#FEC519"/><circle cx="25" cy="20" r="3" fill="#FEC519"/></svg>Entrega a domicilio en CDMX</p>
     </div>
@@ -388,15 +401,16 @@ footer p{margin:4px 0}
 
       <div class="cuenta" id="cuenta">
         <div><span>Tamales</span><span id="c-sub">$0</span></div>
+        <div class="c-desc"><span>Descuento 10% por pagar en línea</span><span id="c-desc">-$0</span></div>
         <div><span>Envío</span><span id="c-envio">—</span></div>
         <div class="c-total"><span>Total</span><b id="c-total">$0</b></div>
       </div>
       <p class="error" id="error-form" role="alert"></p>
       <div class="acciones">
-        <button class="boton" type="submit" id="pagar">Pagar con Mercado Pago</button>
+        <button class="boton con-descuento" type="submit" id="pagar">Pagar con Mercado Pago<small>Ya con tu 10% de descuento</small></button>
         <a class="boton secundario" id="enlace-wa-pedido" href="#" target="_blank" rel="noopener">Mejor lo pido por WhatsApp</a>
       </div>
-      <p class="seguro">Aceptamos tarjeta de crédito o débito, efectivo en tiendas y saldo de Mercado Pago. Nunca vemos los datos de tu tarjeta.</p>
+      <p class="seguro">Aceptamos tarjeta de crédito o débito, efectivo en tiendas y saldo de Mercado Pago. Nunca vemos los datos de tu tarjeta. El 10% de descuento aplica solo al pagar en línea aquí; no aplica si pides por WhatsApp.</p>
     </form>
   </section>
 </div>
@@ -427,14 +441,21 @@ const API_URL = "https://tamales-dona-juana.vercel.app";
 const PRECIO_MEDIA = 100;     // precio por media docena
 const MIN_MEDIAS = 2;         // pedido mínimo: 2 medias = 1 docena
 const DIAS_ANTICIPACION = 1;  // desde cuándo se puede elegir fecha
+// Descuento por pagar en línea con Mercado Pago (no aplica a pedidos por WhatsApp).
+// IMPORTANTE: esto solo ajusta lo que se MUESTRA y lo que se manda al checkout.
+// Para que Mercado Pago cobre realmente el monto con descuento, la función de
+// pago en Vercel (API_URL + "/api/checkout") debe leer "pago.total" del cuerpo
+// que se envía (o recalcular el 10% de descuento ella misma) en vez de sumar
+// los precios de lista de "paquetes".
+const DESCUENTO_ONLINE = 0.10;
 
 const SABORES = [
   {id:"adobo",   nombre:"Puerco en adobo",                       desc:"Carne de puerco con chiles secos",          color:"#A8321F", foto:"foto-adobo.webp"},
   {id:"verde",   nombre:"Pollo en salsa verde",                  desc:"Pollo en salsa de tomate verde",            color:"#4F8A3C", foto:"foto-verde.webp"},
-  {id:"mole",    nombre:"Pollo en mole almendrado",              desc:"Pollo en mole con almendra",                color:"#5A2E1C", foto:"foto-mole.webp"},
+  {id:"mole",    nombre:"Pollo en mole almendrado",              desc:"Pollo en mole con almendra",                color:"#5A2E1C", foto:""},
   {id:"chicharron", nombre:"Chicharrón prensado",                desc:"En salsa verde con tomate y cilantro",      color:"#D08A2E", foto:"foto-chicharron.webp"},
   {id:"frijolchorizo", nombre:"Frijoles con chorizo y queso manchego", desc:"Frijol, chorizo y queso manchego",    color:"#7A2340", foto:"foto-frijolchorizo.webp"},
-  {id:"frijolqueso",   nombre:"Frijoles con queso manchego",     desc:"Frijol con queso manchego",                 color:"#8C6A48", foto:"foto-frijolqueso.webp"},
+  {id:"frijolqueso",   nombre:"Frijoles con queso manchego",     desc:"Frijol con queso manchego",                 color:"#8C6A48", foto:""},
   {id:"rajas",   nombre:"Rajas con queso",                       desc:"Chile jalapeño y queso panela",             color:"#9DBF5A", foto:"foto-rajas.webp"}
 ];
 /* ===================================================== */
@@ -559,6 +580,14 @@ function totales(){
   const subtotal = charola.reduce((a,p) => a + PRECIO[p.tamano], 0);
   return {piezas, subtotal};
 }
+// Total si se paga aquí en línea con Mercado Pago (con el 10% de descuento ya aplicado).
+function calcularTotalOnline(){
+  const sub = totales().subtotal;
+  const e = envioActual();
+  const envio = e && !e.fuera ? e.costo : 0;
+  const descuento = Math.round(sub * DESCUENTO_ONLINE);
+  return {subtotal: sub, descuento, envio, total: sub - descuento + envio};
+}
 function textoPiezas(p){
   if (p === 0) return "0 piezas";
   const d = Math.floor(p/12), m = p % 12;
@@ -641,11 +670,11 @@ function calcularEnvio(){
     else if (e.fuera) { info.textContent = "No llegamos a ese código postal. Puedes pasar a recoger a Tula 61, Condesa, o escríbenos por WhatsApp."; info.className = "envio-info fuera"; }
     else { info.textContent = `${e.colonias}: a unos ${Math.round(e.km)} km. Envío ${pesos(e.costo)}.`; info.className = "envio-info ok"; }
   }
-  const sub = totales().subtotal;
-  const costo = e && !e.fuera ? e.costo : null;
-  $("c-sub").textContent = pesos(sub);
-  $("c-envio").textContent = !dom ? "Sin costo" : costo === null ? "—" : pesos(costo);
-  $("c-total").textContent = pesos(sub + (costo || 0));
+  const t = calcularTotalOnline();
+  $("c-sub").textContent = pesos(t.subtotal);
+  $("c-desc").textContent = "-" + pesos(t.descuento);
+  $("c-envio").textContent = !dom ? "Sin costo" : (e && !e.fuera ? pesos(e.costo) : "—");
+  $("c-total").textContent = pesos(t.total);
 }
 form.addEventListener("change", e => {
   calcularEnvio();
@@ -659,7 +688,8 @@ function datosPedido(){
   return {
     paquetes: charola,
     cliente: {nombre: (f.get("nombre")||"").trim(), telefono: (f.get("telefono")||"").replace(/\D/g,""), correo: (f.get("correo")||"").trim()},
-    entrega: {tipo: f.get("tipo"), cp: (f.get("cp")||"").trim(), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), horario: f.get("horario") || "", notas: (f.get("notas")||"").trim()}
+    entrega: {tipo: f.get("tipo"), cp: (f.get("cp")||"").trim(), direccion: (f.get("direccion")||"").trim(), fecha: f.get("fecha"), horario: f.get("horario") || "", notas: (f.get("notas")||"").trim()},
+    pago: calcularTotalOnline()
   };
 }
 function validar(p){
@@ -678,7 +708,7 @@ function validar(p){
   return "";
 }
 
-// --- mensaje de WhatsApp (respaldo) ---
+// --- mensaje de WhatsApp (respaldo, sin el descuento de pago en línea) ---
 function mensajeWhatsApp(){
   const p = datosPedido(), {piezas, subtotal} = totales();
   const lineas = charola.map(p => `• ${titulo(p)}${detalle(p) ? " (" + detalle(p) + ")" : ""}`);
@@ -718,7 +748,7 @@ form.addEventListener("submit", async e => {
     location.href = data.init_point;
   } catch (x) {
     $("error-form").textContent = "No pudimos abrir Mercado Pago. Intenta de nuevo o pide por WhatsApp.";
-    btn.disabled = false; btn.textContent = "Pagar con Mercado Pago";
+    btn.disabled = false; btn.innerHTML = "Pagar con Mercado Pago<small>Ya con tu 10% de descuento</small>";
   }
 });
 
