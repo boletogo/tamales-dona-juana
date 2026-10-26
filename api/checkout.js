@@ -4,6 +4,7 @@
 const SITIO = "https://xn--tamalesdoajuana-6qb.com";   // tamalesdoñajuana.com
 const ORIGENES = [SITIO, "https://www.xn--tamalesdoajuana-6qb.com"];
 const PRECIO_MEDIA = 100;        // debe coincidir con la página
+const DESCUENTO_ONLINE = 0.10;   // 10% por pagar en línea; debe coincidir con la página (no aplica al envío)
 const MIN_PIEZAS = 12;
 const PIEZAS = { docena: 12, media: 6 };
 const SABORES = {
@@ -46,6 +47,7 @@ export default async function handler(req, res) {
     const items = [];
     const sabores = {};
     let piezas = 0;
+    let subtotalLista = 0;
     for (const k of paquetes) {
       const n = PIEZAS[k && k.tamano];
       if (!n) return res.status(400).json({ error: "Tamaño inválido" });
@@ -66,10 +68,14 @@ export default async function handler(req, res) {
         titulo = `${k.tamano === "docena" ? "Docena" : "Media docena"} surtida (${partes.join(", ")})`;
       } else return res.status(400).json({ error: "Paquete inválido" });
       piezas += n;
-      items.push({ title: titulo.slice(0, 250), quantity: 1, unit_price: (n / 6) * PRECIO_MEDIA, currency_id: "MXN" });
+      const precioLista = (n / 6) * PRECIO_MEDIA;                                  // 200 docena, 100 media
+      const precioOnline = Math.round(precioLista * (1 - DESCUENTO_ONLINE));      // 180 docena, 90 media
+      items.push({ title: `${titulo} (10% desc. pago en línea)`.slice(0, 250), quantity: 1, unit_price: precioOnline, currency_id: "MXN" });
+      subtotalLista += precioLista;
     }
     if (piezas < MIN_PIEZAS) return res.status(400).json({ error: "El pedido mínimo es una docena" });
-    const subtotal = items.reduce((a, i) => a + i.unit_price, 0);
+    const subtotal = items.reduce((a, i) => a + i.unit_price, 0);   // tamales ya con descuento
+    const descuento = subtotalLista - subtotal;
 
     const c = p.cliente || {}, e = p.entrega || {};
     const nombre = String(c.nombre || "").trim().slice(0, 80);
