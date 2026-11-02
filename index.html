@@ -271,7 +271,7 @@ footer p{margin:4px 0}
     <div class="portada-texto">
       <h1 id="titulo"><span class="t1">Tamales</span><span class="t2">norteños</span><span class="t3">hechos en casa</span></h1>
       <svg class="subrayado" viewBox="0 0 520 16" preserveAspectRatio="none" aria-hidden="true"><path d="M4 11 C120 4 300 2 516 6" stroke="#A3170E" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M40 13 C200 9 360 8 500 10" stroke="#A3170E" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg>
-      <p class="lema">Siete sabores de receta tradicional, preparados en la Ciudad de México.</p>
+      <p class="lema">Seis sabores de receta tradicional, preparados en la Ciudad de México.</p>
       <div class="precios">
         <div class="precio rojo"><b>$200</b>la docena</div>
         <div class="precio crema"><b>$100</b>½ docena</div>
@@ -455,8 +455,7 @@ const SABORES = [
   {id:"mole",    nombre:"Pollo en mole almendrado",              desc:"Pollo en mole con almendra",                color:"#5A2E1C", foto:""},
   {id:"chicharron", nombre:"Chicharrón prensado",                desc:"En salsa verde con tomate y cilantro",      color:"#D08A2E", foto:"foto-chicharron.webp"},
   {id:"frijolchorizo", nombre:"Frijoles con chorizo y queso manchego", desc:"Frijol, chorizo y queso manchego",    color:"#7A2340", foto:"foto-frijolchorizo.webp"},
-  {id:"frijolqueso",   nombre:"Frijoles con queso manchego",     desc:"Frijol con queso manchego",                 color:"#8C6A48", foto:""},
-  {id:"rajas",   nombre:"Rajas con queso",                       desc:"Chile jalapeño y queso panela",             color:"#9DBF5A", foto:"foto-rajas.webp"}
+  {id:"frijolqueso",   nombre:"Frijoles con queso manchego",     desc:"Frijol con queso manchego",                 color:"#8C6A48", foto:""}
 ];
 /* ===================================================== */
 
@@ -468,7 +467,7 @@ const PRECIO = {docena:PRECIO_MEDIA*2, media:PRECIO_MEDIA};
 
 // La charola es una lista de paquetes:
 //  {tipo:"sabor", tamano:"docena"|"media", sabor:"adobo"}
-//  {tipo:"surtida", tamano:"docena"|"media", pares:{adobo:2, rajas:4}}
+//  {tipo:"surtida", tamano:"docena"|"media", pares:{adobo:2, verde:4}}
 const charola = [];
 
 // --- pestañas ---
